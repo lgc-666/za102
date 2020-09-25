@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhbit.za102.dao.MachineMapper">
+  <resultMap id="BaseResultMap" type="zhbit.za102.bean.Machine">
+    <id column="mid" jdbcType="INTEGER" property="mid" />
+    <result column="machineid" jdbcType="VARCHAR" property="machineid" />
+    <result column="adress" jdbcType="VARCHAR" property="adress" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="leastRssi" jdbcType="INTEGER" property="leastrssi" />
+    <result column="beat" jdbcType="TIMESTAMP" property="beat" />
+    <result column="x" jdbcType="VARCHAR" property="x" />
+    <result column="y" jdbcType="VARCHAR" property="y" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    mid, machineid, adress, status, leastRssi, beat, x, y
+  </sql>
+  <select id="selectByExample" parameterType="zhbit.za102.bean.MachineExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from machine
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from machine
+    where mid = #{mid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from machine
+    where mid = #{mid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="zhbit.za102.bean.MachineExample">
+    delete from machine
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="mid" keyProperty="mid" parameterType="zhbit.za102.bean.Machine" useGeneratedKeys="true">
+    insert into machine (machineid, adress, status, 
+      leastRssi, beat, x, 
+      y)
+    values (#{machineid,jdbcType=VARCHAR}, #{adress,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{leastrssi,jdbcType=INTEGER}, #{beat,jdbcType=TIMESTAMP}, #{x,jdbcType=VARCHAR}, 
+      #{y,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="mid" keyProperty="mid" parameterType="zhbit.za102.bean.Machine" useGeneratedKeys="true">
+    insert into machine
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="machineid != null">
+        machineid,
+      </if>
+      <if test="adress != null">
+        adress,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="leastrssi != null">
+        leastRssi,
+      </if>
+      <if test="beat != null">
+        beat,
+      </if>
+      <if test="x != null">
+        x,
+      </if>
+      <if test="y != null">
+        y,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="machineid != null">
+        #{machineid,jdbcType=VARCHAR},
+      </if>
+      <if test="adress != null">
+        #{adress,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="leastrssi != null">
+        #{leastrssi,jdbcType=INTEGER},
+      </if>
+      <if test="beat != null">
+        #{beat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="x != null">
+        #{x,jdbcType=VARCHAR},
+      </if>
+      <if test="y != null">
+        #{y,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="zhbit.za102.bean.MachineExample" resultType="java.lang.Long">
+    select count(*) from machine
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update machine
+    <set>
+      <if test="record.mid != null">
+        mid = #{record.mid,jdbcType=INTEGER},
+      </if>
+      <if test="record.machineid != null">
+        machineid = #{record.machineid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adress != null">
+        adress = #{record.adress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.leastrssi != null">
+        leastRssi = #{record.leastrssi,jdbcType=INTEGER},
+      </if>
+      <if test="record.beat != null">
+        beat = #{record.beat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.x != null">
+        x = #{record.x,jdbcType=VARCHAR},
+      </if>
+      <if test="record.y != null">
+        y = #{record.y,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update machine
+    set mid = #{record.mid,jdbcType=INTEGER},
+      machineid = #{record.machineid,jdbcType=VARCHAR},
+      adress = #{record.adress,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      leastRssi = #{record.leastrssi,jdbcType=INTEGER},
+      beat = #{record.beat,jdbcType=TIMESTAMP},
+      x = #{record.x,jdbcType=VARCHAR},
+      y = #{record.y,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="zhbit.za102.bean.Machine">
+    update machine
+    <set>
+      <if test="machineid != null">
+        machineid = #{machineid,jdbcType=VARCHAR},
+      </if>
+      <if test="adress != null">
+        adress = #{adress,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="leastrssi != null">
+        leastRssi = #{leastrssi,jdbcType=INTEGER},
+      </if>
+      <if test="beat != null">
+        beat = #{beat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="x != null">
+        x = #{x,jdbcType=VARCHAR},
+      </if>
+      <if test="y != null">
+        y = #{y,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where mid = #{mid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zhbit.za102.bean.Machine">
+    update machine
+    set machineid = #{machineid,jdbcType=VARCHAR},
+      adress = #{adress,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      leastRssi = #{leastrssi,jdbcType=INTEGER},
+      beat = #{beat,jdbcType=TIMESTAMP},
+      x = #{x,jdbcType=VARCHAR},
+      y = #{y,jdbcType=VARCHAR}
+    where mid = #{mid,jdbcType=INTEGER}
+  </update>
+</mapper>

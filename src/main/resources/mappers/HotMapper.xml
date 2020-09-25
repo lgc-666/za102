@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhbit.za102.dao.HotMapper">
+  <resultMap id="BaseResultMap" type="zhbit.za102.bean.Hot">
+    <id column="hotid" jdbcType="INTEGER" property="hotid" />
+    <result column="x" jdbcType="VARCHAR" property="x" />
+    <result column="y" jdbcType="VARCHAR" property="y" />
+    <result column="adress" jdbcType="VARCHAR" property="adress" />
+    <result column="time_start" jdbcType="TIMESTAMP" property="timeStart" />
+    <result column="time_end" jdbcType="TIMESTAMP" property="timeEnd" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    hotid, x, y, adress, time_start, time_end
+  </sql>
+  <select id="selectByExample" parameterType="zhbit.za102.bean.HotExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from hot
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from hot
+    where hotid = #{hotid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from hot
+    where hotid = #{hotid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="zhbit.za102.bean.HotExample">
+    delete from hot
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="hotid" keyProperty="hotid" parameterType="zhbit.za102.bean.Hot" useGeneratedKeys="true">
+    insert into hot (x, y, adress, 
+      time_start, time_end)
+    values (#{x,jdbcType=VARCHAR}, #{y,jdbcType=VARCHAR}, #{adress,jdbcType=VARCHAR}, 
+      #{timeStart,jdbcType=TIMESTAMP}, #{timeEnd,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="hotid" keyProperty="hotid" parameterType="zhbit.za102.bean.Hot" useGeneratedKeys="true">
+    insert into hot
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="x != null">
+        x,
+      </if>
+      <if test="y != null">
+        y,
+      </if>
+      <if test="adress != null">
+        adress,
+      </if>
+      <if test="timeStart != null">
+        time_start,
+      </if>
+      <if test="timeEnd != null">
+        time_end,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="x != null">
+        #{x,jdbcType=VARCHAR},
+      </if>
+      <if test="y != null">
+        #{y,jdbcType=VARCHAR},
+      </if>
+      <if test="adress != null">
+        #{adress,jdbcType=VARCHAR},
+      </if>
+      <if test="timeStart != null">
+        #{timeStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeEnd != null">
+        #{timeEnd,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="zhbit.za102.bean.HotExample" resultType="java.lang.Long">
+    select count(*) from hot
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update hot
+    <set>
+      <if test="record.hotid != null">
+        hotid = #{record.hotid,jdbcType=INTEGER},
+      </if>
+      <if test="record.x != null">
+        x = #{record.x,jdbcType=VARCHAR},
+      </if>
+      <if test="record.y != null">
+        y = #{record.y,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adress != null">
+        adress = #{record.adress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.timeStart != null">
+        time_start = #{record.timeStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.timeEnd != null">
+        time_end = #{record.timeEnd,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update hot
+    set hotid = #{record.hotid,jdbcType=INTEGER},
+      x = #{record.x,jdbcType=VARCHAR},
+      y = #{record.y,jdbcType=VARCHAR},
+      adress = #{record.adress,jdbcType=VARCHAR},
+      time_start = #{record.timeStart,jdbcType=TIMESTAMP},
+      time_end = #{record.timeEnd,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="zhbit.za102.bean.Hot">
+    update hot
+    <set>
+      <if test="x != null">
+        x = #{x,jdbcType=VARCHAR},
+      </if>
+      <if test="y != null">
+        y = #{y,jdbcType=VARCHAR},
+      </if>
+      <if test="adress != null">
+        adress = #{adress,jdbcType=VARCHAR},
+      </if>
+      <if test="timeStart != null">
+        time_start = #{timeStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeEnd != null">
+        time_end = #{timeEnd,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where hotid = #{hotid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zhbit.za102.bean.Hot">
+    update hot
+    set x = #{x,jdbcType=VARCHAR},
+      y = #{y,jdbcType=VARCHAR},
+      adress = #{adress,jdbcType=VARCHAR},
+      time_start = #{timeStart,jdbcType=TIMESTAMP},
+      time_end = #{timeEnd,jdbcType=TIMESTAMP}
+    where hotid = #{hotid,jdbcType=INTEGER}
+  </update>
+</mapper>

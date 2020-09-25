@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhbit.za102.dao.ClassMapper">
+  <resultMap id="BaseResultMap" type="zhbit.za102.bean.Class">
+    <id column="classid" jdbcType="INTEGER" property="classid" />
+    <result column="adress" jdbcType="VARCHAR" property="adress" />
+    <result column="x1" jdbcType="VARCHAR" property="x1" />
+    <result column="y1" jdbcType="VARCHAR" property="y1" />
+    <result column="x2" jdbcType="VARCHAR" property="x2" />
+    <result column="y2" jdbcType="VARCHAR" property="y2" />
+    <result column="stopJudge" jdbcType="INTEGER" property="stopjudge" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    classid, adress, x1, y1, x2, y2, stopJudge
+  </sql>
+  <select id="selectByExample" parameterType="zhbit.za102.bean.ClassExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from class
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from class
+    where classid = #{classid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from class
+    where classid = #{classid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="zhbit.za102.bean.ClassExample">
+    delete from class
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="classid" keyProperty="classid" parameterType="zhbit.za102.bean.Class" useGeneratedKeys="true">
+    insert into class (adress, x1, y1, 
+      x2, y2, stopJudge)
+    values (#{adress,jdbcType=VARCHAR}, #{x1,jdbcType=VARCHAR}, #{y1,jdbcType=VARCHAR}, 
+      #{x2,jdbcType=VARCHAR}, #{y2,jdbcType=VARCHAR}, #{stopjudge,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="classid" keyProperty="classid" parameterType="zhbit.za102.bean.Class" useGeneratedKeys="true">
+    insert into class
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="adress != null">
+        adress,
+      </if>
+      <if test="x1 != null">
+        x1,
+      </if>
+      <if test="y1 != null">
+        y1,
+      </if>
+      <if test="x2 != null">
+        x2,
+      </if>
+      <if test="y2 != null">
+        y2,
+      </if>
+      <if test="stopjudge != null">
+        stopJudge,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="adress != null">
+        #{adress,jdbcType=VARCHAR},
+      </if>
+      <if test="x1 != null">
+        #{x1,jdbcType=VARCHAR},
+      </if>
+      <if test="y1 != null">
+        #{y1,jdbcType=VARCHAR},
+      </if>
+      <if test="x2 != null">
+        #{x2,jdbcType=VARCHAR},
+      </if>
+      <if test="y2 != null">
+        #{y2,jdbcType=VARCHAR},
+      </if>
+      <if test="stopjudge != null">
+        #{stopjudge,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="zhbit.za102.bean.ClassExample" resultType="java.lang.Long">
+    select count(*) from class
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update class
+    <set>
+      <if test="record.classid != null">
+        classid = #{record.classid,jdbcType=INTEGER},
+      </if>
+      <if test="record.adress != null">
+        adress = #{record.adress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.x1 != null">
+        x1 = #{record.x1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.y1 != null">
+        y1 = #{record.y1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.x2 != null">
+        x2 = #{record.x2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.y2 != null">
+        y2 = #{record.y2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stopjudge != null">
+        stopJudge = #{record.stopjudge,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update class
+    set classid = #{record.classid,jdbcType=INTEGER},
+      adress = #{record.adress,jdbcType=VARCHAR},
+      x1 = #{record.x1,jdbcType=VARCHAR},
+      y1 = #{record.y1,jdbcType=VARCHAR},
+      x2 = #{record.x2,jdbcType=VARCHAR},
+      y2 = #{record.y2,jdbcType=VARCHAR},
+      stopJudge = #{record.stopjudge,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="zhbit.za102.bean.Class">
+    update class
+    <set>
+      <if test="adress != null">
+        adress = #{adress,jdbcType=VARCHAR},
+      </if>
+      <if test="x1 != null">
+        x1 = #{x1,jdbcType=VARCHAR},
+      </if>
+      <if test="y1 != null">
+        y1 = #{y1,jdbcType=VARCHAR},
+      </if>
+      <if test="x2 != null">
+        x2 = #{x2,jdbcType=VARCHAR},
+      </if>
+      <if test="y2 != null">
+        y2 = #{y2,jdbcType=VARCHAR},
+      </if>
+      <if test="stopjudge != null">
+        stopJudge = #{stopjudge,jdbcType=INTEGER},
+      </if>
+    </set>
+    where classid = #{classid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zhbit.za102.bean.Class">
+    update class
+    set adress = #{adress,jdbcType=VARCHAR},
+      x1 = #{x1,jdbcType=VARCHAR},
+      y1 = #{y1,jdbcType=VARCHAR},
+      x2 = #{x2,jdbcType=VARCHAR},
+      y2 = #{y2,jdbcType=VARCHAR},
+      stopJudge = #{stopjudge,jdbcType=INTEGER}
+    where classid = #{classid,jdbcType=INTEGER}
+  </update>
+</mapper>

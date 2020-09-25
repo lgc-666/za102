@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhbit.za102.dao.PermissionMapper">
+  <resultMap id="BaseResultMap" type="zhbit.za102.bean.Permission">
+    <id column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="component" jdbcType="VARCHAR" property="component" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="iconCls" jdbcType="VARCHAR" property="iconcls" />
+    <result column="keepAlive" jdbcType="VARCHAR" property="keepalive" />
+    <result column="requireAuth" jdbcType="VARCHAR" property="requireauth" />
+    <result column="parentId" jdbcType="INTEGER" property="parentid" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+  </resultMap>
+  <resultMap id="menus" type="zhbit.za102.bean.Permission" extends="BaseResultMap">
+    <collection property="child" ofType="zhbit.za102.bean.Permission">
+      <id column="pid2" jdbcType="INTEGER" property="pid" />
+      <result column="url2" jdbcType="VARCHAR" property="url" />
+      <result column="path2" jdbcType="VARCHAR" property="path" />
+      <result column="component2" jdbcType="VARCHAR" property="component" />
+      <result column="name2" jdbcType="VARCHAR" property="name" />
+      <result column="iconCls2" jdbcType="VARCHAR" property="iconcls" />
+      <result column="keepAlive2" jdbcType="VARCHAR" property="keepalive" />
+      <result column="requireAuth2" jdbcType="VARCHAR" property="requireauth" />
+      <result column="parentId2" jdbcType="INTEGER" property="parentid" />
+      <result column="enabled2" jdbcType="BIT" property="enabled" />
+    </collection>
+  </resultMap>
+
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    pid, url, path, component, name, iconCls, keepAlive, requireAuth, parentId, enabled
+  </sql>
+
+  <select id="getmenuByuserid" resultMap="menus">
+     select DISTINCT p1.*,p2.parentId as parentId2,p2.pid as pid2,p2.path as path2,p2.name as name2,p2.iconCls as iconCls2,p2.component as component2 from permission p1,permission p2,user_role ur,role_permission rp where p1.pid=p2.parentId and ur.rid=#{rid} and ur.rid=rp.rid and rp.pid=p2.pid and p2.enabled=true ORDER BY pid2;
+  </select>
+
+  <select id="selectByExample" parameterType="zhbit.za102.bean.PermissionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from permission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from permission
+    where pid = #{pid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from permission
+    where pid = #{pid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="zhbit.za102.bean.PermissionExample">
+    delete from permission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="pid" keyProperty="pid" parameterType="zhbit.za102.bean.Permission" useGeneratedKeys="true">
+    insert into permission (url, path, component, 
+      name, iconCls, keepAlive, 
+      requireAuth, parentId, enabled
+      )
+    values (#{url,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{component,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{iconcls,jdbcType=VARCHAR}, #{keepalive,jdbcType=VARCHAR}, 
+      #{requireauth,jdbcType=VARCHAR}, #{parentid,jdbcType=INTEGER}, #{enabled,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="pid" keyProperty="pid" parameterType="zhbit.za102.bean.Permission" useGeneratedKeys="true">
+    insert into permission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="url != null">
+        url,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="component != null">
+        component,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="iconcls != null">
+        iconCls,
+      </if>
+      <if test="keepalive != null">
+        keepAlive,
+      </if>
+      <if test="requireauth != null">
+        requireAuth,
+      </if>
+      <if test="parentid != null">
+        parentId,
+      </if>
+      <if test="enabled != null">
+        enabled,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="component != null">
+        #{component,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="iconcls != null">
+        #{iconcls,jdbcType=VARCHAR},
+      </if>
+      <if test="keepalive != null">
+        #{keepalive,jdbcType=VARCHAR},
+      </if>
+      <if test="requireauth != null">
+        #{requireauth,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null">
+        #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="zhbit.za102.bean.PermissionExample" resultType="java.lang.Long">
+    select count(*) from permission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update permission
+    <set>
+      <if test="record.pid != null">
+        pid = #{record.pid,jdbcType=INTEGER},
+      </if>
+      <if test="record.url != null">
+        url = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.path != null">
+        path = #{record.path,jdbcType=VARCHAR},
+      </if>
+      <if test="record.component != null">
+        component = #{record.component,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.iconcls != null">
+        iconCls = #{record.iconcls,jdbcType=VARCHAR},
+      </if>
+      <if test="record.keepalive != null">
+        keepAlive = #{record.keepalive,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requireauth != null">
+        requireAuth = #{record.requireauth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentid != null">
+        parentId = #{record.parentid,jdbcType=INTEGER},
+      </if>
+      <if test="record.enabled != null">
+        enabled = #{record.enabled,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update permission
+    set pid = #{record.pid,jdbcType=INTEGER},
+      url = #{record.url,jdbcType=VARCHAR},
+      path = #{record.path,jdbcType=VARCHAR},
+      component = #{record.component,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      iconCls = #{record.iconcls,jdbcType=VARCHAR},
+      keepAlive = #{record.keepalive,jdbcType=VARCHAR},
+      requireAuth = #{record.requireauth,jdbcType=VARCHAR},
+      parentId = #{record.parentid,jdbcType=INTEGER},
+      enabled = #{record.enabled,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="zhbit.za102.bean.Permission">
+    update permission
+    <set>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="component != null">
+        component = #{component,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="iconcls != null">
+        iconCls = #{iconcls,jdbcType=VARCHAR},
+      </if>
+      <if test="keepalive != null">
+        keepAlive = #{keepalive,jdbcType=VARCHAR},
+      </if>
+      <if test="requireauth != null">
+        requireAuth = #{requireauth,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null">
+        parentId = #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="enabled != null">
+        enabled = #{enabled,jdbcType=BIT},
+      </if>
+    </set>
+    where pid = #{pid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zhbit.za102.bean.Permission">
+    update permission
+    set url = #{url,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      component = #{component,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      iconCls = #{iconcls,jdbcType=VARCHAR},
+      keepAlive = #{keepalive,jdbcType=VARCHAR},
+      requireAuth = #{requireauth,jdbcType=VARCHAR},
+      parentId = #{parentid,jdbcType=INTEGER},
+      enabled = #{enabled,jdbcType=BIT}
+    where pid = #{pid,jdbcType=INTEGER}
+  </update>
+</mapper>

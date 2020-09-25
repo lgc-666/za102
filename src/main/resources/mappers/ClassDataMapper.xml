@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhbit.za102.dao.ClassDataMapper">
+  <resultMap id="BaseResultMap" type="zhbit.za102.bean.ClassData">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="adress" jdbcType="VARCHAR" property="adress" />
+    <result column="new_student" jdbcType="INTEGER" property="newStudent" />
+    <result column="in_class_number" jdbcType="INTEGER" property="inClassNumber" />
+    <result column="jump_out" jdbcType="INTEGER" property="jumpOut" />
+    <result column="class_now_number" jdbcType="INTEGER" property="classNowNumber" />
+    <result column="hour_class_number" jdbcType="INTEGER" property="hourClassNumber" />
+    <result column="hour_in_class_number" jdbcType="INTEGER" property="hourInClassNumber" />
+    <result column="updatetime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="hours" jdbcType="INTEGER" property="hours" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, adress, new_student, in_class_number, jump_out, class_now_number, hour_class_number, 
+    hour_in_class_number, updatetime, hours
+  </sql>
+  <select id="selectByExample" parameterType="zhbit.za102.bean.ClassDataExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from class_data
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from class_data
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from class_data
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="zhbit.za102.bean.ClassDataExample">
+    delete from class_data
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="zhbit.za102.bean.ClassData" useGeneratedKeys="true">
+    insert into class_data (adress, new_student, in_class_number, 
+      jump_out, class_now_number, hour_class_number, 
+      hour_in_class_number, updatetime, hours
+      )
+    values (#{adress,jdbcType=VARCHAR}, #{newStudent,jdbcType=INTEGER}, #{inClassNumber,jdbcType=INTEGER}, 
+      #{jumpOut,jdbcType=INTEGER}, #{classNowNumber,jdbcType=INTEGER}, #{hourClassNumber,jdbcType=INTEGER}, 
+      #{hourInClassNumber,jdbcType=INTEGER}, #{updatetime,jdbcType=TIMESTAMP}, #{hours,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="zhbit.za102.bean.ClassData" useGeneratedKeys="true">
+    insert into class_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="adress != null">
+        adress,
+      </if>
+      <if test="newStudent != null">
+        new_student,
+      </if>
+      <if test="inClassNumber != null">
+        in_class_number,
+      </if>
+      <if test="jumpOut != null">
+        jump_out,
+      </if>
+      <if test="classNowNumber != null">
+        class_now_number,
+      </if>
+      <if test="hourClassNumber != null">
+        hour_class_number,
+      </if>
+      <if test="hourInClassNumber != null">
+        hour_in_class_number,
+      </if>
+      <if test="updatetime != null">
+        updatetime,
+      </if>
+      <if test="hours != null">
+        hours,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="adress != null">
+        #{adress,jdbcType=VARCHAR},
+      </if>
+      <if test="newStudent != null">
+        #{newStudent,jdbcType=INTEGER},
+      </if>
+      <if test="inClassNumber != null">
+        #{inClassNumber,jdbcType=INTEGER},
+      </if>
+      <if test="jumpOut != null">
+        #{jumpOut,jdbcType=INTEGER},
+      </if>
+      <if test="classNowNumber != null">
+        #{classNowNumber,jdbcType=INTEGER},
+      </if>
+      <if test="hourClassNumber != null">
+        #{hourClassNumber,jdbcType=INTEGER},
+      </if>
+      <if test="hourInClassNumber != null">
+        #{hourInClassNumber,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hours != null">
+        #{hours,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="zhbit.za102.bean.ClassDataExample" resultType="java.lang.Long">
+    select count(*) from class_data
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update class_data
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.adress != null">
+        adress = #{record.adress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.newStudent != null">
+        new_student = #{record.newStudent,jdbcType=INTEGER},
+      </if>
+      <if test="record.inClassNumber != null">
+        in_class_number = #{record.inClassNumber,jdbcType=INTEGER},
+      </if>
+      <if test="record.jumpOut != null">
+        jump_out = #{record.jumpOut,jdbcType=INTEGER},
+      </if>
+      <if test="record.classNowNumber != null">
+        class_now_number = #{record.classNowNumber,jdbcType=INTEGER},
+      </if>
+      <if test="record.hourClassNumber != null">
+        hour_class_number = #{record.hourClassNumber,jdbcType=INTEGER},
+      </if>
+      <if test="record.hourInClassNumber != null">
+        hour_in_class_number = #{record.hourInClassNumber,jdbcType=INTEGER},
+      </if>
+      <if test="record.updatetime != null">
+        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.hours != null">
+        hours = #{record.hours,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update class_data
+    set id = #{record.id,jdbcType=INTEGER},
+      adress = #{record.adress,jdbcType=VARCHAR},
+      new_student = #{record.newStudent,jdbcType=INTEGER},
+      in_class_number = #{record.inClassNumber,jdbcType=INTEGER},
+      jump_out = #{record.jumpOut,jdbcType=INTEGER},
+      class_now_number = #{record.classNowNumber,jdbcType=INTEGER},
+      hour_class_number = #{record.hourClassNumber,jdbcType=INTEGER},
+      hour_in_class_number = #{record.hourInClassNumber,jdbcType=INTEGER},
+      updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      hours = #{record.hours,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="zhbit.za102.bean.ClassData">
+    update class_data
+    <set>
+      <if test="adress != null">
+        adress = #{adress,jdbcType=VARCHAR},
+      </if>
+      <if test="newStudent != null">
+        new_student = #{newStudent,jdbcType=INTEGER},
+      </if>
+      <if test="inClassNumber != null">
+        in_class_number = #{inClassNumber,jdbcType=INTEGER},
+      </if>
+      <if test="jumpOut != null">
+        jump_out = #{jumpOut,jdbcType=INTEGER},
+      </if>
+      <if test="classNowNumber != null">
+        class_now_number = #{classNowNumber,jdbcType=INTEGER},
+      </if>
+      <if test="hourClassNumber != null">
+        hour_class_number = #{hourClassNumber,jdbcType=INTEGER},
+      </if>
+      <if test="hourInClassNumber != null">
+        hour_in_class_number = #{hourInClassNumber,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null">
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hours != null">
+        hours = #{hours,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zhbit.za102.bean.ClassData">
+    update class_data
+    set adress = #{adress,jdbcType=VARCHAR},
+      new_student = #{newStudent,jdbcType=INTEGER},
+      in_class_number = #{inClassNumber,jdbcType=INTEGER},
+      jump_out = #{jumpOut,jdbcType=INTEGER},
+      class_now_number = #{classNowNumber,jdbcType=INTEGER},
+      hour_class_number = #{hourClassNumber,jdbcType=INTEGER},
+      hour_in_class_number = #{hourInClassNumber,jdbcType=INTEGER},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      hours = #{hours,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
