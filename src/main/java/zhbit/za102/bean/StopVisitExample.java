@@ -1,7 +1,6 @@
 package zhbit.za102.bean;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class StopVisitExample {
@@ -305,52 +304,62 @@ public class StopVisitExample {
             return (Criteria) this;
         }
 
-        public Criteria andInTimeEqualTo(Date value) {
+        public Criteria andInTimeEqualTo(String value) {
             addCriterion("in_time =", value, "inTime");
             return (Criteria) this;
         }
 
-        public Criteria andInTimeNotEqualTo(Date value) {
+        public Criteria andInTimeNotEqualTo(String value) {
             addCriterion("in_time <>", value, "inTime");
             return (Criteria) this;
         }
 
-        public Criteria andInTimeGreaterThan(Date value) {
+        public Criteria andInTimeGreaterThan(String value) {
             addCriterion("in_time >", value, "inTime");
             return (Criteria) this;
         }
 
-        public Criteria andInTimeGreaterThanOrEqualTo(Date value) {
+        public Criteria andInTimeGreaterThanOrEqualTo(String value) {
             addCriterion("in_time >=", value, "inTime");
             return (Criteria) this;
         }
 
-        public Criteria andInTimeLessThan(Date value) {
+        public Criteria andInTimeLessThan(String value) {
             addCriterion("in_time <", value, "inTime");
             return (Criteria) this;
         }
 
-        public Criteria andInTimeLessThanOrEqualTo(Date value) {
+        public Criteria andInTimeLessThanOrEqualTo(String value) {
             addCriterion("in_time <=", value, "inTime");
             return (Criteria) this;
         }
 
-        public Criteria andInTimeIn(List<Date> values) {
+        public Criteria andInTimeLike(String value) {
+            addCriterion("in_time like", value, "inTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInTimeNotLike(String value) {
+            addCriterion("in_time not like", value, "inTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInTimeIn(List<String> values) {
             addCriterion("in_time in", values, "inTime");
             return (Criteria) this;
         }
 
-        public Criteria andInTimeNotIn(List<Date> values) {
+        public Criteria andInTimeNotIn(List<String> values) {
             addCriterion("in_time not in", values, "inTime");
             return (Criteria) this;
         }
 
-        public Criteria andInTimeBetween(Date value1, Date value2) {
+        public Criteria andInTimeBetween(String value1, String value2) {
             addCriterion("in_time between", value1, value2, "inTime");
             return (Criteria) this;
         }
 
-        public Criteria andInTimeNotBetween(Date value1, Date value2) {
+        public Criteria andInTimeNotBetween(String value1, String value2) {
             addCriterion("in_time not between", value1, value2, "inTime");
             return (Criteria) this;
         }
@@ -365,52 +374,62 @@ public class StopVisitExample {
             return (Criteria) this;
         }
 
-        public Criteria andLeftTimeEqualTo(Date value) {
+        public Criteria andLeftTimeEqualTo(String value) {
             addCriterion("left_time =", value, "leftTime");
             return (Criteria) this;
         }
 
-        public Criteria andLeftTimeNotEqualTo(Date value) {
+        public Criteria andLeftTimeNotEqualTo(String value) {
             addCriterion("left_time <>", value, "leftTime");
             return (Criteria) this;
         }
 
-        public Criteria andLeftTimeGreaterThan(Date value) {
+        public Criteria andLeftTimeGreaterThan(String value) {
             addCriterion("left_time >", value, "leftTime");
             return (Criteria) this;
         }
 
-        public Criteria andLeftTimeGreaterThanOrEqualTo(Date value) {
+        public Criteria andLeftTimeGreaterThanOrEqualTo(String value) {
             addCriterion("left_time >=", value, "leftTime");
             return (Criteria) this;
         }
 
-        public Criteria andLeftTimeLessThan(Date value) {
+        public Criteria andLeftTimeLessThan(String value) {
             addCriterion("left_time <", value, "leftTime");
             return (Criteria) this;
         }
 
-        public Criteria andLeftTimeLessThanOrEqualTo(Date value) {
+        public Criteria andLeftTimeLessThanOrEqualTo(String value) {
             addCriterion("left_time <=", value, "leftTime");
             return (Criteria) this;
         }
 
-        public Criteria andLeftTimeIn(List<Date> values) {
+        public Criteria andLeftTimeLike(String value) {
+            addCriterion("left_time like", value, "leftTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeftTimeNotLike(String value) {
+            addCriterion("left_time not like", value, "leftTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeftTimeIn(List<String> values) {
             addCriterion("left_time in", values, "leftTime");
             return (Criteria) this;
         }
 
-        public Criteria andLeftTimeNotIn(List<Date> values) {
+        public Criteria andLeftTimeNotIn(List<String> values) {
             addCriterion("left_time not in", values, "leftTime");
             return (Criteria) this;
         }
 
-        public Criteria andLeftTimeBetween(Date value1, Date value2) {
+        public Criteria andLeftTimeBetween(String value1, String value2) {
             addCriterion("left_time between", value1, value2, "leftTime");
             return (Criteria) this;
         }
 
-        public Criteria andLeftTimeNotBetween(Date value1, Date value2) {
+        public Criteria andLeftTimeNotBetween(String value1, String value2) {
             addCriterion("left_time not between", value1, value2, "leftTime");
             return (Criteria) this;
         }
@@ -555,52 +574,62 @@ public class StopVisitExample {
             return (Criteria) this;
         }
 
-        public Criteria andBeatEqualTo(Date value) {
+        public Criteria andBeatEqualTo(String value) {
             addCriterion("beat =", value, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatNotEqualTo(Date value) {
+        public Criteria andBeatNotEqualTo(String value) {
             addCriterion("beat <>", value, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatGreaterThan(Date value) {
+        public Criteria andBeatGreaterThan(String value) {
             addCriterion("beat >", value, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatGreaterThanOrEqualTo(Date value) {
+        public Criteria andBeatGreaterThanOrEqualTo(String value) {
             addCriterion("beat >=", value, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatLessThan(Date value) {
+        public Criteria andBeatLessThan(String value) {
             addCriterion("beat <", value, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatLessThanOrEqualTo(Date value) {
+        public Criteria andBeatLessThanOrEqualTo(String value) {
             addCriterion("beat <=", value, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatIn(List<Date> values) {
+        public Criteria andBeatLike(String value) {
+            addCriterion("beat like", value, "beat");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeatNotLike(String value) {
+            addCriterion("beat not like", value, "beat");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeatIn(List<String> values) {
             addCriterion("beat in", values, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatNotIn(List<Date> values) {
+        public Criteria andBeatNotIn(List<String> values) {
             addCriterion("beat not in", values, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatBetween(Date value1, Date value2) {
+        public Criteria andBeatBetween(String value1, String value2) {
             addCriterion("beat between", value1, value2, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatNotBetween(Date value1, Date value2) {
+        public Criteria andBeatNotBetween(String value1, String value2) {
             addCriterion("beat not between", value1, value2, "beat");
             return (Criteria) this;
         }

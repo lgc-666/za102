@@ -203,7 +203,7 @@
       <if test="salt != null">
         salt = #{salt,jdbcType=VARCHAR},
       </if>
-      <if test="studentname != null">
+      <if test="mac != null">
         mac = #{mac,jdbcType=VARCHAR},
       </if>
     </set>

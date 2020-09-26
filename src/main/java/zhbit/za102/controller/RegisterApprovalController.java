@@ -1,5 +1,7 @@
 package zhbit.za102.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import zhbit.za102.bean.Msg;
@@ -19,10 +21,13 @@ public class RegisterApprovalController {
     UserService userService;
 
     @GetMapping("/listregisterApproval")
-    public Msg list() {  //所有用户
+    public Msg list(@RequestParam(value = "start",defaultValue = "1")int start,
+                    @RequestParam(value = "size",defaultValue = "8")int size)throws Exception {  //所有用户
         try {
+            PageHelper.startPage(start, size, "id desc");
             List<RegisterApproval> us = registerApprovalService.list();
-            return new Msg(us);
+            PageInfo<RegisterApproval> page = new PageInfo<>(us);
+            return new Msg(page);
         } catch (Exception e) {
             e.printStackTrace();
             return new Msg("查询失败", 401);

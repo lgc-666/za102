@@ -10,7 +10,7 @@
     <result column="class_now_number" jdbcType="INTEGER" property="classNowNumber" />
     <result column="hour_class_number" jdbcType="INTEGER" property="hourClassNumber" />
     <result column="hour_in_class_number" jdbcType="INTEGER" property="hourInClassNumber" />
-    <result column="updatetime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="updatetime" jdbcType="VARCHAR" property="updatetime" />
     <result column="hours" jdbcType="INTEGER" property="hours" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -113,7 +113,7 @@
       )
     values (#{adress,jdbcType=VARCHAR}, #{newStudent,jdbcType=INTEGER}, #{inClassNumber,jdbcType=INTEGER}, 
       #{jumpOut,jdbcType=INTEGER}, #{classNowNumber,jdbcType=INTEGER}, #{hourClassNumber,jdbcType=INTEGER}, 
-      #{hourInClassNumber,jdbcType=INTEGER}, #{updatetime,jdbcType=TIMESTAMP}, #{hours,jdbcType=INTEGER}
+      #{hourInClassNumber,jdbcType=INTEGER}, #{updatetime,jdbcType=VARCHAR}, #{hours,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="zhbit.za102.bean.ClassData" useGeneratedKeys="true">
@@ -170,7 +170,7 @@
         #{hourInClassNumber,jdbcType=INTEGER},
       </if>
       <if test="updatetime != null">
-        #{updatetime,jdbcType=TIMESTAMP},
+        #{updatetime,jdbcType=VARCHAR},
       </if>
       <if test="hours != null">
         #{hours,jdbcType=INTEGER},
@@ -211,7 +211,7 @@
         hour_in_class_number = #{record.hourInClassNumber,jdbcType=INTEGER},
       </if>
       <if test="record.updatetime != null">
-        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+        updatetime = #{record.updatetime,jdbcType=VARCHAR},
       </if>
       <if test="record.hours != null">
         hours = #{record.hours,jdbcType=INTEGER},
@@ -231,7 +231,7 @@
       class_now_number = #{record.classNowNumber,jdbcType=INTEGER},
       hour_class_number = #{record.hourClassNumber,jdbcType=INTEGER},
       hour_in_class_number = #{record.hourInClassNumber,jdbcType=INTEGER},
-      updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      updatetime = #{record.updatetime,jdbcType=VARCHAR},
       hours = #{record.hours,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -262,7 +262,7 @@
         hour_in_class_number = #{hourInClassNumber,jdbcType=INTEGER},
       </if>
       <if test="updatetime != null">
-        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+        updatetime = #{updatetime,jdbcType=VARCHAR},
       </if>
       <if test="hours != null">
         hours = #{hours,jdbcType=INTEGER},
@@ -279,7 +279,7 @@
       class_now_number = #{classNowNumber,jdbcType=INTEGER},
       hour_class_number = #{hourClassNumber,jdbcType=INTEGER},
       hour_in_class_number = #{hourInClassNumber,jdbcType=INTEGER},
-      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=VARCHAR},
       hours = #{hours,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>

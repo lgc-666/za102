@@ -5,11 +5,11 @@
     <id column="visitid" jdbcType="INTEGER" property="visitid" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="inJudge" jdbcType="INTEGER" property="injudge" />
-    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
-    <result column="left_time" jdbcType="TIMESTAMP" property="leftTime" />
+    <result column="in_time" jdbcType="VARCHAR" property="inTime" />
+    <result column="left_time" jdbcType="VARCHAR" property="leftTime" />
     <result column="rt" jdbcType="VARCHAR" property="rt" />
     <result column="visited_times" jdbcType="INTEGER" property="visitedTimes" />
-    <result column="beat" jdbcType="TIMESTAMP" property="beat" />
+    <result column="beat" jdbcType="VARCHAR" property="beat" />
     <result column="last_in_time" jdbcType="TIMESTAMP" property="lastInTime" />
     <result column="mac" jdbcType="VARCHAR" property="mac" />
   </resultMap>
@@ -111,9 +111,9 @@
       left_time, rt, visited_times, 
       beat, last_in_time, mac
       )
-    values (#{address,jdbcType=VARCHAR}, #{injudge,jdbcType=INTEGER}, #{inTime,jdbcType=TIMESTAMP}, 
-      #{leftTime,jdbcType=TIMESTAMP}, #{rt,jdbcType=VARCHAR}, #{visitedTimes,jdbcType=INTEGER}, 
-      #{beat,jdbcType=TIMESTAMP}, #{lastInTime,jdbcType=TIMESTAMP}, #{mac,jdbcType=VARCHAR}
+    values (#{address,jdbcType=VARCHAR}, #{injudge,jdbcType=INTEGER}, #{inTime,jdbcType=VARCHAR}, 
+      #{leftTime,jdbcType=VARCHAR}, #{rt,jdbcType=VARCHAR}, #{visitedTimes,jdbcType=INTEGER}, 
+      #{beat,jdbcType=VARCHAR}, #{lastInTime,jdbcType=TIMESTAMP}, #{mac,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" keyColumn="visitid" keyProperty="visitid" parameterType="zhbit.za102.bean.Visit" useGeneratedKeys="true">
@@ -155,10 +155,10 @@
         #{injudge,jdbcType=INTEGER},
       </if>
       <if test="inTime != null">
-        #{inTime,jdbcType=TIMESTAMP},
+        #{inTime,jdbcType=VARCHAR},
       </if>
       <if test="leftTime != null">
-        #{leftTime,jdbcType=TIMESTAMP},
+        #{leftTime,jdbcType=VARCHAR},
       </if>
       <if test="rt != null">
         #{rt,jdbcType=VARCHAR},
@@ -167,7 +167,7 @@
         #{visitedTimes,jdbcType=INTEGER},
       </if>
       <if test="beat != null">
-        #{beat,jdbcType=TIMESTAMP},
+        #{beat,jdbcType=VARCHAR},
       </if>
       <if test="lastInTime != null">
         #{lastInTime,jdbcType=TIMESTAMP},
@@ -196,10 +196,10 @@
         inJudge = #{record.injudge,jdbcType=INTEGER},
       </if>
       <if test="record.inTime != null">
-        in_time = #{record.inTime,jdbcType=TIMESTAMP},
+        in_time = #{record.inTime,jdbcType=VARCHAR},
       </if>
       <if test="record.leftTime != null">
-        left_time = #{record.leftTime,jdbcType=TIMESTAMP},
+        left_time = #{record.leftTime,jdbcType=VARCHAR},
       </if>
       <if test="record.rt != null">
         rt = #{record.rt,jdbcType=VARCHAR},
@@ -208,7 +208,7 @@
         visited_times = #{record.visitedTimes,jdbcType=INTEGER},
       </if>
       <if test="record.beat != null">
-        beat = #{record.beat,jdbcType=TIMESTAMP},
+        beat = #{record.beat,jdbcType=VARCHAR},
       </if>
       <if test="record.lastInTime != null">
         last_in_time = #{record.lastInTime,jdbcType=TIMESTAMP},
@@ -226,11 +226,11 @@
     set visitid = #{record.visitid,jdbcType=INTEGER},
       address = #{record.address,jdbcType=VARCHAR},
       inJudge = #{record.injudge,jdbcType=INTEGER},
-      in_time = #{record.inTime,jdbcType=TIMESTAMP},
-      left_time = #{record.leftTime,jdbcType=TIMESTAMP},
+      in_time = #{record.inTime,jdbcType=VARCHAR},
+      left_time = #{record.leftTime,jdbcType=VARCHAR},
       rt = #{record.rt,jdbcType=VARCHAR},
       visited_times = #{record.visitedTimes,jdbcType=INTEGER},
-      beat = #{record.beat,jdbcType=TIMESTAMP},
+      beat = #{record.beat,jdbcType=VARCHAR},
       last_in_time = #{record.lastInTime,jdbcType=TIMESTAMP},
       mac = #{record.mac,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -247,10 +247,10 @@
         inJudge = #{injudge,jdbcType=INTEGER},
       </if>
       <if test="inTime != null">
-        in_time = #{inTime,jdbcType=TIMESTAMP},
+        in_time = #{inTime,jdbcType=VARCHAR},
       </if>
       <if test="leftTime != null">
-        left_time = #{leftTime,jdbcType=TIMESTAMP},
+        left_time = #{leftTime,jdbcType=VARCHAR},
       </if>
       <if test="rt != null">
         rt = #{rt,jdbcType=VARCHAR},
@@ -259,7 +259,7 @@
         visited_times = #{visitedTimes,jdbcType=INTEGER},
       </if>
       <if test="beat != null">
-        beat = #{beat,jdbcType=TIMESTAMP},
+        beat = #{beat,jdbcType=VARCHAR},
       </if>
       <if test="lastInTime != null">
         last_in_time = #{lastInTime,jdbcType=TIMESTAMP},
@@ -274,11 +274,11 @@
     update visit
     set address = #{address,jdbcType=VARCHAR},
       inJudge = #{injudge,jdbcType=INTEGER},
-      in_time = #{inTime,jdbcType=TIMESTAMP},
-      left_time = #{leftTime,jdbcType=TIMESTAMP},
+      in_time = #{inTime,jdbcType=VARCHAR},
+      left_time = #{leftTime,jdbcType=VARCHAR},
       rt = #{rt,jdbcType=VARCHAR},
       visited_times = #{visitedTimes,jdbcType=INTEGER},
-      beat = #{beat,jdbcType=TIMESTAMP},
+      beat = #{beat,jdbcType=VARCHAR},
       last_in_time = #{lastInTime,jdbcType=TIMESTAMP},
       mac = #{mac,jdbcType=VARCHAR}
     where visitid = #{visitid,jdbcType=INTEGER}

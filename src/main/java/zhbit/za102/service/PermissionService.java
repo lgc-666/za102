@@ -73,7 +73,7 @@ public class PermissionService {
 
     public List<Permission> list() {
         PermissionExample example = new PermissionExample();
-        //example.setOrderByClause("pid desc");
+        example.setOrderByClause("pid desc");
         return permissionMapper.selectByExample(example);
 
     }

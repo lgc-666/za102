@@ -7,7 +7,7 @@
     <result column="adress" jdbcType="VARCHAR" property="adress" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="leastRssi" jdbcType="INTEGER" property="leastrssi" />
-    <result column="beat" jdbcType="TIMESTAMP" property="beat" />
+    <result column="beat" jdbcType="VARCHAR" property="beat" />
     <result column="x" jdbcType="VARCHAR" property="x" />
     <result column="y" jdbcType="VARCHAR" property="y" />
   </resultMap>
@@ -108,7 +108,7 @@
       leastRssi, beat, x, 
       y)
     values (#{machineid,jdbcType=VARCHAR}, #{adress,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-      #{leastrssi,jdbcType=INTEGER}, #{beat,jdbcType=TIMESTAMP}, #{x,jdbcType=VARCHAR}, 
+      #{leastrssi,jdbcType=INTEGER}, #{beat,jdbcType=VARCHAR}, #{x,jdbcType=VARCHAR}, 
       #{y,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="mid" keyProperty="mid" parameterType="zhbit.za102.bean.Machine" useGeneratedKeys="true">
@@ -150,7 +150,7 @@
         #{leastrssi,jdbcType=INTEGER},
       </if>
       <if test="beat != null">
-        #{beat,jdbcType=TIMESTAMP},
+        #{beat,jdbcType=VARCHAR},
       </if>
       <if test="x != null">
         #{x,jdbcType=VARCHAR},
@@ -185,7 +185,7 @@
         leastRssi = #{record.leastrssi,jdbcType=INTEGER},
       </if>
       <if test="record.beat != null">
-        beat = #{record.beat,jdbcType=TIMESTAMP},
+        beat = #{record.beat,jdbcType=VARCHAR},
       </if>
       <if test="record.x != null">
         x = #{record.x,jdbcType=VARCHAR},
@@ -205,7 +205,7 @@
       adress = #{record.adress,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=VARCHAR},
       leastRssi = #{record.leastrssi,jdbcType=INTEGER},
-      beat = #{record.beat,jdbcType=TIMESTAMP},
+      beat = #{record.beat,jdbcType=VARCHAR},
       x = #{record.x,jdbcType=VARCHAR},
       y = #{record.y,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -228,7 +228,7 @@
         leastRssi = #{leastrssi,jdbcType=INTEGER},
       </if>
       <if test="beat != null">
-        beat = #{beat,jdbcType=TIMESTAMP},
+        beat = #{beat,jdbcType=VARCHAR},
       </if>
       <if test="x != null">
         x = #{x,jdbcType=VARCHAR},
@@ -245,7 +245,7 @@
       adress = #{adress,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       leastRssi = #{leastrssi,jdbcType=INTEGER},
-      beat = #{beat,jdbcType=TIMESTAMP},
+      beat = #{beat,jdbcType=VARCHAR},
       x = #{x,jdbcType=VARCHAR},
       y = #{y,jdbcType=VARCHAR}
     where mid = #{mid,jdbcType=INTEGER}

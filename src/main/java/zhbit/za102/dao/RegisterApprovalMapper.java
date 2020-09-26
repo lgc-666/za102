@@ -1,12 +1,10 @@
 package zhbit.za102.dao;
 
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 import zhbit.za102.bean.RegisterApproval;
 import zhbit.za102.bean.RegisterApprovalExample;
-
-import java.util.List;
-
 @Component
 public interface RegisterApprovalMapper {
     long countByExample(RegisterApprovalExample example);

@@ -35,7 +35,7 @@ public class MachineService {
 
     public List<Machine> list() {
         MachineExample example = new MachineExample();
-        example.setOrderByClause("id desc");
+        example.setOrderByClause("mid desc");
         return machineMapper.selectByExample(example);
     }
 

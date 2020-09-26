@@ -199,6 +199,12 @@
             <version>5.3.3.RELEASE</version>
             <scope>compile</scope>
         </dependency>
+        <!-- Spring Boot pagehelper 依赖 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.5</version>
+        </dependency>
     </dependencies>
 
     <build>

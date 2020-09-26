@@ -1,5 +1,7 @@
 package zhbit.za102.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import zhbit.za102.bean.Msg;
@@ -52,15 +54,22 @@ public class RoleController {
     }
 
     @GetMapping("/editRole")
-    public Msg editRole(@RequestParam("rid") Integer rid) {
+    public Msg editRole(@RequestParam("rid") Integer rid,@RequestParam(value = "start",defaultValue = "1")int start,
+                        @RequestParam(value = "size",defaultValue = "8")int size)throws Exception {
         try {
-            List<Map> resMap = new ArrayList<Map>();
-            Map<String, List<Permission>> permission_list = new HashMap<>();
+            System.out.println(size);
             Role role = roleService.get(rid);
+            PageHelper.startPage(start, size);
+            //List<Map> resMap = new ArrayList<Map>();
+            Map<String, PageInfo<Permission>> permission_list = new HashMap<>();
+
             List<Permission> ps = permissionService.list();
             List<Permission> currentPermissions = permissionService.list(role);
-            permission_list.put("all_permission", ps);   //全部权限（用于展示）---->拆开
-            permission_list.put("role_permission", currentPermissions);  //该角色的权限（用于默认选中）
+            PageInfo<Permission> page1 = new PageInfo<>(ps);
+            PageInfo<Permission> page2 = new PageInfo<>(currentPermissions);
+            System.out.println("客户"+page1.getPageSize());
+            permission_list.put("all_permission", page1);   //全部权限（用于展示）---->拆开
+            permission_list.put("role_permission", page2);  //该角色的权限（用于默认选中）
             //resMap.add(permission_list);
             return new Msg(permission_list);
         } catch (Exception e) {
