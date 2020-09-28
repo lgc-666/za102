@@ -30,16 +30,7 @@ public class UserController {
     public Msg list(@RequestParam(value = "start",defaultValue = "1")int start,
                     @RequestParam(value = "size",defaultValue = "8")int size)throws Exception {  //所有用户
         try {
-            PageHelper.startPage(start, size, "uid desc");
-            List<User> us = userService.list();
-            //Map<String, List<User>> user_roles = new HashMap<>();
-            for (User user : us) {
-                List<Role> roles = roleService.listRoles(user);
-                user.setRole(roles);
-            }
-            PageInfo<User> page = new PageInfo<>(us);
-            //user_roles.put("listUser", us);
-            return new Msg(page);
+            return userService.list(start, size);
         } catch (Exception e) {
             e.printStackTrace();
             return new Msg("查询失败", 401);

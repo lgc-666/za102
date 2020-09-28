@@ -1,21 +1,24 @@
 package zhbit.za102.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import zhbit.za102.bean.*;
 import zhbit.za102.dao.PermissionMapper;
 import zhbit.za102.dao.RoleMapper;
 import zhbit.za102.dao.RolePermissionMapper;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 这里为了方便我把实现层给省去了
  */
 @Service
+@CacheConfig(cacheNames = "Permission")
 public class PermissionService {
     @Autowired
     PermissionMapper permissionMapper;
@@ -28,6 +31,7 @@ public class PermissionService {
     @Autowired
     RoleMapper roleMapper;
 
+    @Cacheable(key = "'listPermissions'+'-'+#userName")
     public Set<String> listPermissions(String userName) {
         Set<String> result = new HashSet<>();  //对结果进行去重
         List<Role> roles = roleService.listRoles(userName);
@@ -50,26 +54,25 @@ public class PermissionService {
         return result;
     }
 
-
+    @CacheEvict(allEntries = true)
     public void add(Permission u) {
         permissionMapper.insert(u);
     }
 
-
+    @CacheEvict(allEntries = true)
     public void delete(Integer id) {
         permissionMapper.deleteByPrimaryKey(id);
     }
 
-
+    @CacheEvict(allEntries = true)
     public void update(Permission u) {
         permissionMapper.updateByPrimaryKeySelective(u);
     }
 
-
+    @Cacheable(key = "'get'+'-'+#id")
     public Permission get(Integer id) {
         return permissionMapper.selectByPrimaryKey(id);
     }
-
 
     public List<Permission> list() {
         PermissionExample example = new PermissionExample();
@@ -78,7 +81,7 @@ public class PermissionService {
 
     }
 
-
+    @Cacheable(key = "'listPermissions'+'-'+#role")
     public List<Permission> list(Role role) {
         List<Permission> result = new ArrayList<>();
         RolePermissionExample example = new RolePermissionExample();
@@ -134,5 +137,19 @@ public class PermissionService {
         example.createCriteria().andDescEqualTo(roledesc);
         List<Role> rps = roleMapper.selectByExample(example);
         return permissionMapper.getmenuByuserid(rps.get(0).getRid());
+    }
+
+    @Cacheable(key = "'list'+'-'+#start+'-'+#size+'-'+#role.name")
+    public Msg list(int start, int size, Role role) {
+        Map<String, PageInfo<Permission>> permission_list = new HashMap<>();
+        PageHelper.startPage(start, size);
+        List<Permission> ps = list();
+        List<Permission> currentPermissions = list(role);
+        PageInfo<Permission> page1 = new PageInfo<>(ps);
+        PageInfo<Permission> page2 = new PageInfo<>(currentPermissions);
+        System.out.println("客户"+page1.getPageSize());
+        permission_list.put("all_permission", page1);   //全部权限（用于展示）---->拆开
+        permission_list.put("role_permission", page2);  //该角色的权限（用于默认选中）
+        return new Msg(permission_list);
     }
 }

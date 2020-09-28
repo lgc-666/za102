@@ -36,7 +36,7 @@ public class RoleController {
         }
     }
 
-    @GetMapping("/listRolePermission")
+    @GetMapping("listRolePermission")
     public Msg listRolePermission() {
         try {
             List<Role> rs = roleService.list();
@@ -59,19 +59,7 @@ public class RoleController {
         try {
             System.out.println(size);
             Role role = roleService.get(rid);
-            PageHelper.startPage(start, size);
-            //List<Map> resMap = new ArrayList<Map>();
-            Map<String, PageInfo<Permission>> permission_list = new HashMap<>();
-
-            List<Permission> ps = permissionService.list();
-            List<Permission> currentPermissions = permissionService.list(role);
-            PageInfo<Permission> page1 = new PageInfo<>(ps);
-            PageInfo<Permission> page2 = new PageInfo<>(currentPermissions);
-            System.out.println("客户"+page1.getPageSize());
-            permission_list.put("all_permission", page1);   //全部权限（用于展示）---->拆开
-            permission_list.put("role_permission", page2);  //该角色的权限（用于默认选中）
-            //resMap.add(permission_list);
-            return new Msg(permission_list);
+            return permissionService.list(start, size, role);
         } catch (Exception e) {
             e.printStackTrace();
             return new Msg("查询指定角色失败", 401);

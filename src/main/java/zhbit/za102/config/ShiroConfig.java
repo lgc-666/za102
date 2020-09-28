@@ -91,6 +91,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/agreeregisterApproval", "authc");
         filterChainDefinitionMap.put("/deleteregisterApproval", "authc");
         filterChainDefinitionMap.put("/listmachine", "authc");
+        filterChainDefinitionMap.put("/listClass", "authc");
         filterChainDefinitionMap.put("/**", "url");
         shiroFilterFactoryBean.setFilters(customisedFilter);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

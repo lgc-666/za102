@@ -24,10 +24,7 @@ public class RegisterApprovalController {
     public Msg list(@RequestParam(value = "start",defaultValue = "1")int start,
                     @RequestParam(value = "size",defaultValue = "8")int size)throws Exception {  //所有用户
         try {
-            PageHelper.startPage(start, size, "id desc");
-            List<RegisterApproval> us = registerApprovalService.list();
-            PageInfo<RegisterApproval> page = new PageInfo<>(us);
-            return new Msg(page);
+            return registerApprovalService.list(start, size);
         } catch (Exception e) {
             e.printStackTrace();
             return new Msg("查询失败", 401);
