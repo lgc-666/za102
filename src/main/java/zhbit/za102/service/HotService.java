@@ -20,22 +20,22 @@ public class HotService {
     @Autowired
     HotMapper hotMapper;
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Hot",allEntries = true)
     public void add(Hot u) {
         hotMapper.insert(u);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Hot",allEntries = true)
     public void delete(Integer id) {
         hotMapper.deleteByPrimaryKey(id);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Hot",allEntries = true)
     public void update(Hot u) {
         hotMapper.updateByPrimaryKeySelective(u);
     }
 
-    @Cacheable(key = "'get'+'-'+#id")
+    @Cacheable(value="Hot",key = "'get'+'-'+#id")
     public Hot get(Integer id) {
         return hotMapper.selectByPrimaryKey(id);
     }
@@ -46,7 +46,7 @@ public class HotService {
         return hotMapper.selectByExample(example);
     }
 
-    @Cacheable(key = "'list'+'-'+#start+'-'+#size")
+    @Cacheable(value="Hot",key = "'list'+'-'+#start+'-'+#size")
     public Msg list(int start, int size) {
         PageHelper.startPage(start, size, "hotid desc");
         List<Hot> us = list();

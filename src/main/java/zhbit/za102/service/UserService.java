@@ -12,6 +12,7 @@ import zhbit.za102.bean.Role;
 import zhbit.za102.bean.User;
 import zhbit.za102.bean.UserExample;
 import zhbit.za102.dao.UserMapper;
+import zhbit.za102.Utils.RedisUtils;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class UserService {
     @Autowired
     UserRoleService userRoleService;
 
+    RedisUtils redisUtil;
     public String getPassword(String name) {
         User user = getByName(name);
         if (null == user)
@@ -32,7 +34,6 @@ public class UserService {
         return user.getPassword();
     }
 
-    @Cacheable(key = "'usergetByName'+'-'+#name")
     public User getByName(String name) {
         UserExample example = new UserExample();
         example.createCriteria().andUsernameEqualTo(name);
@@ -42,23 +43,23 @@ public class UserService {
         return users.get(0);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="User", allEntries=true)
     public void add(User u) {
         userMapper.insert(u);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="User", allEntries=true)
     public void delete(Integer id) {
         userMapper.deleteByPrimaryKey(id);
         userRoleService.deleteByUser(id);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="User", allEntries=true)
     public void update(User u) {
         userMapper.updateByPrimaryKeySelective(u);
     }
 
-    @Cacheable(key = "'get'+'-'+#id")
+    @Cacheable(value="User",key = "'get'+'-'+#id")
     public User get(Integer id) {
         return userMapper.selectByPrimaryKey(id);
     }
@@ -69,7 +70,7 @@ public class UserService {
         return userMapper.selectByExample(example);
     }
 
-    @Cacheable(key = "'list'+'-'+#start+'-'+#size")
+    @Cacheable(value="User",key = "'list'+'-'+#start+'-'+#size")
     public Msg list(int start, int size) {
         PageHelper.startPage(start, size, "uid desc");
         List<User> us = list();

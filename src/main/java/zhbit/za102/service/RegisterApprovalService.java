@@ -20,22 +20,22 @@ public class RegisterApprovalService {
     @Autowired
     RegisterApprovalMapper registerApprovalMapper;
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="RegisterApproval",allEntries = true)
     public void add(RegisterApproval u) {
         registerApprovalMapper.insert(u);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="RegisterApproval",allEntries = true)
     public void delete(Integer id) {
         registerApprovalMapper.deleteByPrimaryKey(id);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="RegisterApproval",allEntries = true)
     public void update(RegisterApproval u) {
         registerApprovalMapper.updateByPrimaryKeySelective(u);
     }
 
-    @Cacheable(key = "'get'+'-'+#id")
+    @Cacheable(value="RegisterApproval",key = "'get'+'-'+#id")
     public RegisterApproval get(Integer id) {
         return registerApprovalMapper.selectByPrimaryKey(id);
     }
@@ -46,7 +46,7 @@ public class RegisterApprovalService {
         return registerApprovalMapper.selectByExample(example);
     }
 
-    @Cacheable(key = "'list'+'-'+#id")
+    @Cacheable(value="RegisterApproval",key = "'list'+'-'+#id")
     public List<RegisterApproval> list(Integer id) {
         RegisterApprovalExample example = new RegisterApprovalExample();
         example.createCriteria().andIdEqualTo(id);
@@ -54,7 +54,7 @@ public class RegisterApprovalService {
         return registerApprovalMapper.selectByExample(example);
     }
 
-    @Cacheable(key = "'list'+'-'+#start+'-'+#size")
+    @Cacheable(value="RegisterApproval",key = "'list'+'-'+#start+'-'+#size")
     public Msg list(int start, int size) {
         PageHelper.startPage(start, size, "id desc");
         List<RegisterApproval> us = list();

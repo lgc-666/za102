@@ -81,17 +81,28 @@ public class ShiroConfig {
 
         //开放其他接口(登录后可以访问)
         filterChainDefinitionMap.put("/menu","authc");
-        filterChainDefinitionMap.put("/listUser","authc");
-        filterChainDefinitionMap.put("/updatePassword", "authc");
-        filterChainDefinitionMap.put("/updateUser", "authc");
-        filterChainDefinitionMap.put("/listRole", "authc");
-        filterChainDefinitionMap.put("/editRole", "authc");
-        filterChainDefinitionMap.put("/updateRolePermission", "authc");
-        filterChainDefinitionMap.put("/listregisterApproval", "authc");
-        filterChainDefinitionMap.put("/agreeregisterApproval", "authc");
-        filterChainDefinitionMap.put("/deleteregisterApproval", "authc");
-        filterChainDefinitionMap.put("/listmachine", "authc");
-        filterChainDefinitionMap.put("/listClass", "authc");
+
+        filterChainDefinitionMap.put("/listUser","perms[listUser]");
+        filterChainDefinitionMap.put("/updatePassword", "perms[updatePassword]");
+        filterChainDefinitionMap.put("/updateUser", "perms[updateUser]");
+
+        filterChainDefinitionMap.put("/listRole", "perms[listRole]");
+        filterChainDefinitionMap.put("/editRole", "perms[editRole]");
+        filterChainDefinitionMap.put("/updateRolePermission", "perms[updateRolePermission]");
+
+        filterChainDefinitionMap.put("/listregisterApproval", "perms[listregisterApproval]");
+        filterChainDefinitionMap.put("/agreeregisterApproval", "perms[agreeregisterApproval]");
+        filterChainDefinitionMap.put("/deleteregisterApproval", "perms[deleteregisterApproval]");
+
+        filterChainDefinitionMap.put("/listmachine", "perms[listmachine]");
+        filterChainDefinitionMap.put("/deletemachine", "perms[deletemachine]");
+        filterChainDefinitionMap.put("/updatemachine", "perms[updatemachine]");
+        filterChainDefinitionMap.put("/addmachine", "perms[addmachine]");
+
+        filterChainDefinitionMap.put("/listClass", "perms[listClass]");
+        filterChainDefinitionMap.put("/deleteClass", "perms[deleteClass]");
+        filterChainDefinitionMap.put("/updateClass", "perms[updateClass]");
+        filterChainDefinitionMap.put("/addClass", "perms[addClass]");
         filterChainDefinitionMap.put("/**", "url");
         shiroFilterFactoryBean.setFilters(customisedFilter);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

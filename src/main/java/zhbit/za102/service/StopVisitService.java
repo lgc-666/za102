@@ -21,34 +21,34 @@ public class StopVisitService {
     @Autowired
     StopVisitMapper stopVisitMapper;
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="StopVisit",allEntries = true)
     public void add(StopVisit u) {
         stopVisitMapper.insert(u);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="StopVisit",allEntries = true)
     public void delete(Integer id) {
         stopVisitMapper.deleteByPrimaryKey(id);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="StopVisit",allEntries = true)
     public void update(StopVisit u) {
         stopVisitMapper.updateByPrimaryKeySelective(u);
     }
 
-    @Cacheable(key = "'get'+'-'+#id")
+    @Cacheable(value="StopVisit",key = "'get'+'-'+#id")
     public StopVisit get(Integer id) {
         return stopVisitMapper.selectByPrimaryKey(id);
     }
 
-    @Cacheable(key = "'list'")
+    @Cacheable(value="StopVisit",key = "'list'")
     public List<StopVisit> list() {
         StopVisitExample example = new StopVisitExample();
         example.setOrderByClause("stopVisitId desc");
         return stopVisitMapper.selectByExample(example);
     }
 
-    @Cacheable(key = "'list'+'-'+#start+'-'+#size")
+    @Cacheable(value="StopVisit",key = "'list'+'-'+#start+'-'+#size")
     public Msg list(int start, int size) {
         PageHelper.startPage(start, size, "stopVisitId desc");
         List<StopVisit> us = list();

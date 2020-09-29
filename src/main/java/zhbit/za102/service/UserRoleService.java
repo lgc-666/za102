@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+import zhbit.za102.Utils.RedisUtils;
 import zhbit.za102.bean.User;
 import zhbit.za102.bean.UserRole;
 import zhbit.za102.bean.UserRoleExample;
@@ -12,13 +13,12 @@ import zhbit.za102.dao.UserRoleMapper;
 import java.util.List;
 
 @Service
-@CacheConfig(cacheNames = "UserRole")
 public class UserRoleService {
 
     @Autowired
     UserRoleMapper userRoleMapper;
-
-    @CacheEvict(allEntries = true)
+    RedisUtils redisUtil;
+    @CacheEvict(value="User", allEntries=true)
     public void setRoles(User user, Integer[] roleIds) {
         // 删除当前用户所有的角色
         UserRoleExample example = new UserRoleExample();
@@ -39,7 +39,7 @@ public class UserRoleService {
             }
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="User", allEntries=true)
     public void deleteByUser(Integer userId) {
         UserRoleExample example = new UserRoleExample();
         example.createCriteria().andUidEqualTo(userId);
@@ -49,7 +49,7 @@ public class UserRoleService {
         }
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="User", allEntries=true)
     public void deleteByRole(Integer roleId) {
         UserRoleExample example = new UserRoleExample();
         example.createCriteria().andRidEqualTo(roleId);

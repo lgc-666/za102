@@ -20,18 +20,18 @@ public class ClassService {
     @Autowired
     ClassMapper classMapper;
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Class",allEntries = true)
     public void add(Class u) {
         classMapper.insert(u);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Class",allEntries = true)
     public void delete(Integer id) { classMapper.deleteByPrimaryKey(id); }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Class",allEntries = true)
     public void update(Class u) { classMapper.updateByPrimaryKeySelective(u); }
 
-    @Cacheable(key = "'get'+'-'+#id")
+    @Cacheable(value="Class",key = "'get'+'-'+#id")
     public Class get(Integer id) {
         return classMapper.selectByPrimaryKey(id);
     }
@@ -43,7 +43,7 @@ public class ClassService {
         return classMapper.selectByExample(example);
     }
 
-    @Cacheable(key = "'list'+'-'+#start+'-'+#size")
+    @Cacheable(value="Class",key = "'list'+'-'+#start+'-'+#size")
     public Msg list(int start, int size) {
         PageHelper.startPage(start, size, "classid desc");
         List<Class> us = list();

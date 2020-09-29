@@ -20,22 +20,22 @@ public class ClassDataService {
     @Autowired
     ClassDataMapper classDataMapper;
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="ClassData",allEntries = true)
     public void add(ClassData u) {
         classDataMapper.insert(u);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="ClassData",allEntries = true)
     public void delete(Integer id) {
         classDataMapper.deleteByPrimaryKey(id);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="ClassData",allEntries = true)
     public void update(ClassData u) {
         classDataMapper.updateByPrimaryKeySelective(u);
     }
 
-    @Cacheable(key = "'get'+'-'+#id")
+    @Cacheable(value="ClassData",key = "'get'+'-'+#id")
     public ClassData get(Integer id) {
         return classDataMapper.selectByPrimaryKey(id);
     }

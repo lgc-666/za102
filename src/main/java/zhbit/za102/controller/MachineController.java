@@ -2,9 +2,7 @@ package zhbit.za102.controller;
 
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import zhbit.za102.bean.Machine;
 import zhbit.za102.bean.Msg;
 import zhbit.za102.service.MachineService;
@@ -27,4 +25,56 @@ public class MachineController {
             return new Msg("查询失败", 401);
         }
     }
+
+    @DeleteMapping("/deletemachine")
+    public Msg delete(@RequestParam("mid") Integer mid) {
+        try {
+            machineService.delete(mid);
+            return new Msg("删除操作成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Msg("删除操作失败", 401);
+        }
+    }
+
+    @PutMapping("/updatemachine")
+    public Msg update(@RequestParam("mid") Integer mid, @RequestParam("adress") String adress, @RequestParam("machineid") String machineid, @RequestParam("status") String status, @RequestParam("leastRssi") Integer leastRssi, @RequestParam("beat") String beat, @RequestParam("x") String x, @RequestParam("y") String y) {
+        try {
+            Machine c=machineService.get(mid);
+            c.setAdress(adress);
+            c.setMachineid(machineid);
+            c.setBeat(beat);
+            if(leastRssi!=null){
+                c.setLeastrssi(leastRssi);
+            }
+            c.setX(x);
+            c.setY(y);
+            c.setStatus(status);
+            machineService.update(c);
+            return new Msg("修改操作成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Msg("修改操作失败", 401);
+        }
+    }
+
+    @PostMapping("/addmachine")
+    public Msg add(@RequestParam("adress") String adress, @RequestParam("machineid") String machineid, @RequestParam("status") String status, @RequestParam("leastRssi") Integer leastRssi, @RequestParam("beat") String beat, @RequestParam("x") String x, @RequestParam("y") String y) {
+        try {
+            Machine c=new Machine();
+            c.setAdress(adress);
+            c.setMachineid(machineid);
+            c.setBeat(beat);
+            c.setLeastrssi(leastRssi);
+            c.setX(x);
+            c.setY(y);
+            c.setStatus(status);
+            machineService.add(c);
+            return new Msg("新增操作成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Msg("新增操作失败", 401);
+        }
+    }
+
 }

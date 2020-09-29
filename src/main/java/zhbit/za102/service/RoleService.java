@@ -5,6 +5,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import zhbit.za102.Utils.RedisUtils;
 import zhbit.za102.bean.*;
 import zhbit.za102.dao.RoleMapper;
 import zhbit.za102.dao.UserRoleMapper;
@@ -24,7 +25,8 @@ public class RoleService {
     @Autowired
     UserService userService;
 
-    @Cacheable(key = "'listRoleNames'+'-'+#userName")
+    RedisUtils redisUtil;
+
     public Set<String> listRoleNames(String userName) {  //去重
         Set<String> result = new HashSet<>();
         List<Role> roles = listRoles(userName);
@@ -34,7 +36,6 @@ public class RoleService {
         return result;
     }
 
-    @Cacheable(key = "'listRoles'+'-'+#userName")
     public List<Role> listRoles(String userName) {
         List<Role> roles = new ArrayList<>();
         User user = userService.getByName(userName);
@@ -44,15 +45,13 @@ public class RoleService {
         return roles;
     }
 
-    @Cacheable(key = "'listRoles'")
     public List<Role> list() {
         RoleExample example = new RoleExample();
-        example.setOrderByClause("rid desc");
+        //example.setOrderByClause("rid desc");
         return roleMapper.selectByExample(example);
 
     }
 
-    @Cacheable(key = "'listRoles'+'-'+#user")
     public List<Role> listRoles(User user) {
         List<Role> roles = new ArrayList<>();
 
@@ -68,25 +67,24 @@ public class RoleService {
         return roles;
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Role", allEntries=true)
     public void add(Role u) {
         roleMapper.insert(u);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Role", allEntries=true)
     public void delete(Integer id) {
         roleMapper.deleteByPrimaryKey(id);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Role", allEntries=true)
     public void update(Role u) {
         roleMapper.updateByPrimaryKeySelective(u);
     }
 
-    @Cacheable(key = "'Role'+'-'+#id")
+    @Cacheable(value="Role",key = "'Role'+'-'+#id")
     public Role get(Integer id) {
         return roleMapper.selectByPrimaryKey(id);
     }
-
 
 }

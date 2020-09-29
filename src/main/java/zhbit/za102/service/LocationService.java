@@ -20,22 +20,22 @@ public class LocationService {
     @Autowired
     LocationMapper locationMapper;
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Location",allEntries = true)
     public void add(Location u) {
         locationMapper.insert(u);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Location",allEntries = true)
     public void delete(Integer id) {
         locationMapper.deleteByPrimaryKey(id);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Location",allEntries = true)
     public void update(Location u) {
         locationMapper.updateByPrimaryKeySelective(u);
     }
 
-    @Cacheable(key = "'get'+'-'+#id")
+    @Cacheable(value="Location",key = "'get'+'-'+#id")
     public Location get(Integer id) {
         return locationMapper.selectByPrimaryKey(id);
     }
@@ -46,7 +46,7 @@ public class LocationService {
         return locationMapper.selectByExample(example);
     }
 
-    @Cacheable(key = "'list'+'-'+#start+'-'+#size")
+    @Cacheable(value="Location",key = "'list'+'-'+#start+'-'+#size")
     public Msg list(int start, int size) {
         PageHelper.startPage(start, size, "locationid desc");
         List<Location> us = list();

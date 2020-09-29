@@ -21,22 +21,22 @@ public class VisitService {
     @Autowired
     VisitMapper visitMapper;
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Visit",allEntries = true)
     public void add(Visit u) {
         visitMapper.insert(u);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Visit",allEntries = true)
     public void delete(Integer id) {
         visitMapper.deleteByPrimaryKey(id);
     }
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="Visit",allEntries = true)
     public void update(Visit u) {
         visitMapper.updateByPrimaryKeySelective(u);
     }
 
-    @Cacheable(key = "'get'+'-'+#id")
+    @Cacheable(value="Visit",key = "'get'+'-'+#id")
     public Visit get(Integer id) {
         return visitMapper.selectByPrimaryKey(id);
     }
@@ -47,7 +47,7 @@ public class VisitService {
         return visitMapper.selectByExample(example);
     }
 
-    @Cacheable(key = "'list'+'-'+#start+'-'+#size")
+    @Cacheable(value="Visit",key = "'list'+'-'+#start+'-'+#size")
     public Msg list(int start, int size) {
         PageHelper.startPage(start, size, "visitid desc");
         List<Visit> us = list();
