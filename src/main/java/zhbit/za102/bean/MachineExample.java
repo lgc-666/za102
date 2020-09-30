@@ -1,6 +1,7 @@
 package zhbit.za102.bean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MachineExample {
@@ -444,62 +445,52 @@ public class MachineExample {
             return (Criteria) this;
         }
 
-        public Criteria andBeatEqualTo(String value) {
+        public Criteria andBeatEqualTo(Date value) {
             addCriterion("beat =", value, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatNotEqualTo(String value) {
+        public Criteria andBeatNotEqualTo(Date value) {
             addCriterion("beat <>", value, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatGreaterThan(String value) {
+        public Criteria andBeatGreaterThan(Date value) {
             addCriterion("beat >", value, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatGreaterThanOrEqualTo(String value) {
+        public Criteria andBeatGreaterThanOrEqualTo(Date value) {
             addCriterion("beat >=", value, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatLessThan(String value) {
+        public Criteria andBeatLessThan(Date value) {
             addCriterion("beat <", value, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatLessThanOrEqualTo(String value) {
+        public Criteria andBeatLessThanOrEqualTo(Date value) {
             addCriterion("beat <=", value, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatLike(String value) {
-            addCriterion("beat like", value, "beat");
-            return (Criteria) this;
-        }
-
-        public Criteria andBeatNotLike(String value) {
-            addCriterion("beat not like", value, "beat");
-            return (Criteria) this;
-        }
-
-        public Criteria andBeatIn(List<String> values) {
+        public Criteria andBeatIn(List<Date> values) {
             addCriterion("beat in", values, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatNotIn(List<String> values) {
+        public Criteria andBeatNotIn(List<Date> values) {
             addCriterion("beat not in", values, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatBetween(String value1, String value2) {
+        public Criteria andBeatBetween(Date value1, Date value2) {
             addCriterion("beat between", value1, value2, "beat");
             return (Criteria) this;
         }
 
-        public Criteria andBeatNotBetween(String value1, String value2) {
+        public Criteria andBeatNotBetween(Date value1, Date value2) {
             addCriterion("beat not between", value1, value2, "beat");
             return (Criteria) this;
         }

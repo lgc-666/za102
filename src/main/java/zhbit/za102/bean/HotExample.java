@@ -1,6 +1,7 @@
 package zhbit.za102.bean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class HotExample {
@@ -384,62 +385,52 @@ public class HotExample {
             return (Criteria) this;
         }
 
-        public Criteria andTimeStartEqualTo(String value) {
+        public Criteria andTimeStartEqualTo(Date value) {
             addCriterion("time_start =", value, "timeStart");
             return (Criteria) this;
         }
 
-        public Criteria andTimeStartNotEqualTo(String value) {
+        public Criteria andTimeStartNotEqualTo(Date value) {
             addCriterion("time_start <>", value, "timeStart");
             return (Criteria) this;
         }
 
-        public Criteria andTimeStartGreaterThan(String value) {
+        public Criteria andTimeStartGreaterThan(Date value) {
             addCriterion("time_start >", value, "timeStart");
             return (Criteria) this;
         }
 
-        public Criteria andTimeStartGreaterThanOrEqualTo(String value) {
+        public Criteria andTimeStartGreaterThanOrEqualTo(Date value) {
             addCriterion("time_start >=", value, "timeStart");
             return (Criteria) this;
         }
 
-        public Criteria andTimeStartLessThan(String value) {
+        public Criteria andTimeStartLessThan(Date value) {
             addCriterion("time_start <", value, "timeStart");
             return (Criteria) this;
         }
 
-        public Criteria andTimeStartLessThanOrEqualTo(String value) {
+        public Criteria andTimeStartLessThanOrEqualTo(Date value) {
             addCriterion("time_start <=", value, "timeStart");
             return (Criteria) this;
         }
 
-        public Criteria andTimeStartLike(String value) {
-            addCriterion("time_start like", value, "timeStart");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimeStartNotLike(String value) {
-            addCriterion("time_start not like", value, "timeStart");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimeStartIn(List<String> values) {
+        public Criteria andTimeStartIn(List<Date> values) {
             addCriterion("time_start in", values, "timeStart");
             return (Criteria) this;
         }
 
-        public Criteria andTimeStartNotIn(List<String> values) {
+        public Criteria andTimeStartNotIn(List<Date> values) {
             addCriterion("time_start not in", values, "timeStart");
             return (Criteria) this;
         }
 
-        public Criteria andTimeStartBetween(String value1, String value2) {
+        public Criteria andTimeStartBetween(Date value1, Date value2) {
             addCriterion("time_start between", value1, value2, "timeStart");
             return (Criteria) this;
         }
 
-        public Criteria andTimeStartNotBetween(String value1, String value2) {
+        public Criteria andTimeStartNotBetween(Date value1, Date value2) {
             addCriterion("time_start not between", value1, value2, "timeStart");
             return (Criteria) this;
         }
@@ -454,62 +445,52 @@ public class HotExample {
             return (Criteria) this;
         }
 
-        public Criteria andTimeEndEqualTo(String value) {
+        public Criteria andTimeEndEqualTo(Date value) {
             addCriterion("time_end =", value, "timeEnd");
             return (Criteria) this;
         }
 
-        public Criteria andTimeEndNotEqualTo(String value) {
+        public Criteria andTimeEndNotEqualTo(Date value) {
             addCriterion("time_end <>", value, "timeEnd");
             return (Criteria) this;
         }
 
-        public Criteria andTimeEndGreaterThan(String value) {
+        public Criteria andTimeEndGreaterThan(Date value) {
             addCriterion("time_end >", value, "timeEnd");
             return (Criteria) this;
         }
 
-        public Criteria andTimeEndGreaterThanOrEqualTo(String value) {
+        public Criteria andTimeEndGreaterThanOrEqualTo(Date value) {
             addCriterion("time_end >=", value, "timeEnd");
             return (Criteria) this;
         }
 
-        public Criteria andTimeEndLessThan(String value) {
+        public Criteria andTimeEndLessThan(Date value) {
             addCriterion("time_end <", value, "timeEnd");
             return (Criteria) this;
         }
 
-        public Criteria andTimeEndLessThanOrEqualTo(String value) {
+        public Criteria andTimeEndLessThanOrEqualTo(Date value) {
             addCriterion("time_end <=", value, "timeEnd");
             return (Criteria) this;
         }
 
-        public Criteria andTimeEndLike(String value) {
-            addCriterion("time_end like", value, "timeEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimeEndNotLike(String value) {
-            addCriterion("time_end not like", value, "timeEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimeEndIn(List<String> values) {
+        public Criteria andTimeEndIn(List<Date> values) {
             addCriterion("time_end in", values, "timeEnd");
             return (Criteria) this;
         }
 
-        public Criteria andTimeEndNotIn(List<String> values) {
+        public Criteria andTimeEndNotIn(List<Date> values) {
             addCriterion("time_end not in", values, "timeEnd");
             return (Criteria) this;
         }
 
-        public Criteria andTimeEndBetween(String value1, String value2) {
+        public Criteria andTimeEndBetween(Date value1, Date value2) {
             addCriterion("time_end between", value1, value2, "timeEnd");
             return (Criteria) this;
         }
 
-        public Criteria andTimeEndNotBetween(String value1, String value2) {
+        public Criteria andTimeEndNotBetween(Date value1, Date value2) {
             addCriterion("time_end not between", value1, value2, "timeEnd");
             return (Criteria) this;
         }

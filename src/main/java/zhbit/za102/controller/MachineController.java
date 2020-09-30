@@ -1,13 +1,9 @@
 package zhbit.za102.controller;
 
-import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import zhbit.za102.bean.Machine;
 import zhbit.za102.bean.Msg;
 import zhbit.za102.service.MachineService;
-import com.github.pagehelper.PageInfo;
-import java.util.List;
 
 
 @RestController

@@ -112,7 +112,8 @@ public class PermissionService {
             {
                     str+=p.getUrl()+",";
             }
-            List<String> list1 = Arrays.asList(StringUtils.split(str, ","));//由Arrays.asList() 返回的市Arrays的内部类ArrayList， 而不是java.util.ArrayList。
+            //由Arrays.asList() 返回的市Arrays的内部类ArrayList， 而不是java.util.ArrayList。
+            List<String> list1 = Arrays.asList(StringUtils.split(str, ","));
             List<String> list = new ArrayList<>(list1);
             for(String a:list)
             {
@@ -146,7 +147,8 @@ public class PermissionService {
                 str+=p.getUrl()+",";
             }
         }
-        List<String> list1 = Arrays.asList(StringUtils.split(str, ","));//由Arrays.asList() 返回的市Arrays的内部类ArrayList， 而不是java.util.ArrayList。
+        //由Arrays.asList() 返回的市Arrays的内部类ArrayList， 而不是java.util.ArrayList。
+        List<String> list1 = Arrays.asList(StringUtils.split(str, ","));
         List<String> list = new ArrayList<>(list1);
         for(String a:list)
         {

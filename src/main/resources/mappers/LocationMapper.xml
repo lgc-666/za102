@@ -7,7 +7,7 @@
     <result column="adress" jdbcType="VARCHAR" property="adress" />
     <result column="x" jdbcType="VARCHAR" property="x" />
     <result column="y" jdbcType="VARCHAR" property="y" />
-    <result column="beat" jdbcType="VARCHAR" property="beat" />
+    <result column="beat" jdbcType="TIMESTAMP" property="beat" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -105,7 +105,7 @@
     insert into location (mac, adress, x, 
       y, beat)
     values (#{mac,jdbcType=VARCHAR}, #{adress,jdbcType=VARCHAR}, #{x,jdbcType=VARCHAR}, 
-      #{y,jdbcType=VARCHAR}, #{beat,jdbcType=VARCHAR})
+      #{y,jdbcType=VARCHAR}, #{beat,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="locationid" keyProperty="locationid" parameterType="zhbit.za102.bean.Location" useGeneratedKeys="true">
     insert into location
@@ -140,7 +140,7 @@
         #{y,jdbcType=VARCHAR},
       </if>
       <if test="beat != null">
-        #{beat,jdbcType=VARCHAR},
+        #{beat,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -169,7 +169,7 @@
         y = #{record.y,jdbcType=VARCHAR},
       </if>
       <if test="record.beat != null">
-        beat = #{record.beat,jdbcType=VARCHAR},
+        beat = #{record.beat,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null">
@@ -183,7 +183,7 @@
       adress = #{record.adress,jdbcType=VARCHAR},
       x = #{record.x,jdbcType=VARCHAR},
       y = #{record.y,jdbcType=VARCHAR},
-      beat = #{record.beat,jdbcType=VARCHAR}
+      beat = #{record.beat,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -204,7 +204,7 @@
         y = #{y,jdbcType=VARCHAR},
       </if>
       <if test="beat != null">
-        beat = #{beat,jdbcType=VARCHAR},
+        beat = #{beat,jdbcType=TIMESTAMP},
       </if>
     </set>
     where locationid = #{locationid,jdbcType=INTEGER}
@@ -215,7 +215,7 @@
       adress = #{adress,jdbcType=VARCHAR},
       x = #{x,jdbcType=VARCHAR},
       y = #{y,jdbcType=VARCHAR},
-      beat = #{beat,jdbcType=VARCHAR}
+      beat = #{beat,jdbcType=TIMESTAMP}
     where locationid = #{locationid,jdbcType=INTEGER}
   </update>
 </mapper>

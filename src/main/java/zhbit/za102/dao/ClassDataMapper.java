@@ -28,4 +28,7 @@ public interface ClassDataMapper {
     int updateByPrimaryKeySelective(ClassData record);
 
     int updateByPrimaryKey(ClassData record);
+
+    Integer selectWithin1hour();
+    Integer selectWithin1hourByClass();
 }

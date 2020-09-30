@@ -6,8 +6,8 @@
     <result column="x" jdbcType="VARCHAR" property="x" />
     <result column="y" jdbcType="VARCHAR" property="y" />
     <result column="adress" jdbcType="VARCHAR" property="adress" />
-    <result column="time_start" jdbcType="VARCHAR" property="timeStart" />
-    <result column="time_end" jdbcType="VARCHAR" property="timeEnd" />
+    <result column="time_start" jdbcType="TIMESTAMP" property="timeStart" />
+    <result column="time_end" jdbcType="TIMESTAMP" property="timeEnd" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -105,7 +105,7 @@
     insert into hot (x, y, adress, 
       time_start, time_end)
     values (#{x,jdbcType=VARCHAR}, #{y,jdbcType=VARCHAR}, #{adress,jdbcType=VARCHAR}, 
-      #{timeStart,jdbcType=VARCHAR}, #{timeEnd,jdbcType=VARCHAR})
+      #{timeStart,jdbcType=TIMESTAMP}, #{timeEnd,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="hotid" keyProperty="hotid" parameterType="zhbit.za102.bean.Hot" useGeneratedKeys="true">
     insert into hot
@@ -137,10 +137,10 @@
         #{adress,jdbcType=VARCHAR},
       </if>
       <if test="timeStart != null">
-        #{timeStart,jdbcType=VARCHAR},
+        #{timeStart,jdbcType=TIMESTAMP},
       </if>
       <if test="timeEnd != null">
-        #{timeEnd,jdbcType=VARCHAR},
+        #{timeEnd,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -166,10 +166,10 @@
         adress = #{record.adress,jdbcType=VARCHAR},
       </if>
       <if test="record.timeStart != null">
-        time_start = #{record.timeStart,jdbcType=VARCHAR},
+        time_start = #{record.timeStart,jdbcType=TIMESTAMP},
       </if>
       <if test="record.timeEnd != null">
-        time_end = #{record.timeEnd,jdbcType=VARCHAR},
+        time_end = #{record.timeEnd,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null">
@@ -182,8 +182,8 @@
       x = #{record.x,jdbcType=VARCHAR},
       y = #{record.y,jdbcType=VARCHAR},
       adress = #{record.adress,jdbcType=VARCHAR},
-      time_start = #{record.timeStart,jdbcType=VARCHAR},
-      time_end = #{record.timeEnd,jdbcType=VARCHAR}
+      time_start = #{record.timeStart,jdbcType=TIMESTAMP},
+      time_end = #{record.timeEnd,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -201,10 +201,10 @@
         adress = #{adress,jdbcType=VARCHAR},
       </if>
       <if test="timeStart != null">
-        time_start = #{timeStart,jdbcType=VARCHAR},
+        time_start = #{timeStart,jdbcType=TIMESTAMP},
       </if>
       <if test="timeEnd != null">
-        time_end = #{timeEnd,jdbcType=VARCHAR},
+        time_end = #{timeEnd,jdbcType=TIMESTAMP},
       </if>
     </set>
     where hotid = #{hotid,jdbcType=INTEGER}
@@ -214,8 +214,8 @@
     set x = #{x,jdbcType=VARCHAR},
       y = #{y,jdbcType=VARCHAR},
       adress = #{adress,jdbcType=VARCHAR},
-      time_start = #{timeStart,jdbcType=VARCHAR},
-      time_end = #{timeEnd,jdbcType=VARCHAR}
+      time_start = #{timeStart,jdbcType=TIMESTAMP},
+      time_end = #{timeEnd,jdbcType=TIMESTAMP}
     where hotid = #{hotid,jdbcType=INTEGER}
   </update>
 </mapper>

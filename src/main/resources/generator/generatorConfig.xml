@@ -40,41 +40,13 @@
         <property name="enableSubPackages" value="true"/>
     </javaClientGenerator>
     <!--生成对应表及类名，要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
-    <table tableName="class" domainObjectName="Class" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        <property name="my.isgen.usekeys" value="true"/>
-        <generatedKey column="classid" sqlStatement="JDBC"/>
-    </table>
     <table tableName="class_data" domainObjectName="ClassData" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        <property name="my.isgen.usekeys" value="true"/>
-        <generatedKey column="id" sqlStatement="JDBC"/>
-    </table>
-    <table tableName="permission" domainObjectName="Permission" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        <property name="my.isgen.usekeys" value="true"/>
-        <generatedKey column="pid" sqlStatement="JDBC"/>
-    </table>
-    <table tableName="register_approval" domainObjectName="RegisterApproval" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        <property name="my.isgen.usekeys" value="true"/>
-        <generatedKey column="id" sqlStatement="JDBC"/>
-    </table>
-    <table tableName="role" domainObjectName="Role" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        <property name="my.isgen.usekeys" value="true"/>
-        <generatedKey column="rid" sqlStatement="JDBC"/>
-    </table>
-    <table tableName="role_permission" domainObjectName="RolePermission" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         <property name="my.isgen.usekeys" value="true"/>
         <generatedKey column="id" sqlStatement="JDBC"/>
     </table>
     <table tableName="stop_visit" domainObjectName="StopVisit" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         <property name="my.isgen.usekeys" value="true"/>
         <generatedKey column="stop_visit_id" sqlStatement="JDBC"/>
-    </table>
-    <table tableName="user" domainObjectName="User" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        <property name="my.isgen.usekeys" value="true"/>
-        <generatedKey column="uid" sqlStatement="JDBC"/>
-    </table>
-    <table tableName="user_role" domainObjectName="UserRole" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        <property name="my.isgen.usekeys" value="true"/>
-        <generatedKey column="id" sqlStatement="JDBC"/>
     </table>
     <table tableName="visit" domainObjectName="Visit" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         <property name="my.isgen.usekeys" value="true"/>

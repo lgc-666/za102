@@ -1,6 +1,7 @@
 package zhbit.za102.bean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ClassDataExample {
@@ -604,62 +605,52 @@ public class ClassDataExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeEqualTo(String value) {
+        public Criteria andUpdatetimeEqualTo(Date value) {
             addCriterion("updatetime =", value, "updatetime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeNotEqualTo(String value) {
+        public Criteria andUpdatetimeNotEqualTo(Date value) {
             addCriterion("updatetime <>", value, "updatetime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeGreaterThan(String value) {
+        public Criteria andUpdatetimeGreaterThan(Date value) {
             addCriterion("updatetime >", value, "updatetime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeGreaterThanOrEqualTo(String value) {
+        public Criteria andUpdatetimeGreaterThanOrEqualTo(Date value) {
             addCriterion("updatetime >=", value, "updatetime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeLessThan(String value) {
+        public Criteria andUpdatetimeLessThan(Date value) {
             addCriterion("updatetime <", value, "updatetime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeLessThanOrEqualTo(String value) {
+        public Criteria andUpdatetimeLessThanOrEqualTo(Date value) {
             addCriterion("updatetime <=", value, "updatetime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeLike(String value) {
-            addCriterion("updatetime like", value, "updatetime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdatetimeNotLike(String value) {
-            addCriterion("updatetime not like", value, "updatetime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdatetimeIn(List<String> values) {
+        public Criteria andUpdatetimeIn(List<Date> values) {
             addCriterion("updatetime in", values, "updatetime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeNotIn(List<String> values) {
+        public Criteria andUpdatetimeNotIn(List<Date> values) {
             addCriterion("updatetime not in", values, "updatetime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeBetween(String value1, String value2) {
+        public Criteria andUpdatetimeBetween(Date value1, Date value2) {
             addCriterion("updatetime between", value1, value2, "updatetime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeNotBetween(String value1, String value2) {
+        public Criteria andUpdatetimeNotBetween(Date value1, Date value2) {
             addCriterion("updatetime not between", value1, value2, "updatetime");
             return (Criteria) this;
         }

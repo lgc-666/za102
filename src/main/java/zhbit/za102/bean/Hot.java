@@ -1,5 +1,7 @@
 package zhbit.za102.bean;
 
+import java.util.Date;
+
 public class Hot {
     private Integer hotid;
 
@@ -9,9 +11,9 @@ public class Hot {
 
     private String adress;
 
-    private String timeStart;
+    private Date timeStart;
 
-    private String timeEnd;
+    private Date timeEnd;
 
     public Integer getHotid() {
         return hotid;
@@ -45,19 +47,19 @@ public class Hot {
         this.adress = adress == null ? null : adress.trim();
     }
 
-    public String getTimeStart() {
+    public Date getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(String timeStart) {
-        this.timeStart = timeStart == null ? null : timeStart.trim();
+    public void setTimeStart(Date timeStart) {
+        this.timeStart = timeStart;
     }
 
-    public String getTimeEnd() {
+    public Date getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(String timeEnd) {
-        this.timeEnd = timeEnd == null ? null : timeEnd.trim();
+    public void setTimeEnd(Date timeEnd) {
+        this.timeEnd = timeEnd;
     }
 }

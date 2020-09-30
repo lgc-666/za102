@@ -1,5 +1,7 @@
 package zhbit.za102.bean;
 
+import java.util.Date;
+
 public class ClassData {
     private Integer id;
 
@@ -17,7 +19,7 @@ public class ClassData {
 
     private Integer hourInClassNumber;
 
-    private String updatetime;
+    private Date updatetime;
 
     private Integer hours;
 
@@ -85,12 +87,12 @@ public class ClassData {
         this.hourInClassNumber = hourInClassNumber;
     }
 
-    public String getUpdatetime() {
+    public Date getUpdatetime() {
         return updatetime;
     }
 
-    public void setUpdatetime(String updatetime) {
-        this.updatetime = updatetime == null ? null : updatetime.trim();
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
     }
 
     public Integer getHours() {

@@ -53,4 +53,12 @@ public class ClassDataService {
         PageInfo<ClassData> page = new PageInfo<>(us);
         return new Msg(page);
     }
+
+    public Integer selectWithin1hour(){
+        return classDataMapper.selectWithin1hour();
+    }
+    public Integer selectWithin1hourByClass(){
+        return classDataMapper.selectWithin1hourByClass();
+    }
+
 }

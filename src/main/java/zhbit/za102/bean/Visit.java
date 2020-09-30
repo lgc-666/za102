@@ -9,19 +9,21 @@ public class Visit {
 
     private Integer injudge;
 
-    private String inTime;
+    private Date inTime;
 
-    private String leftTime;
+    private Date leftTime;
 
     private String rt;
 
     private Integer visitedTimes;
 
-    private String beat;
+    private Date beat;
 
     private Date lastInTime;
 
     private String mac;
+
+    private Integer rssi;
 
     public Integer getVisitid() {
         return visitid;
@@ -47,20 +49,20 @@ public class Visit {
         this.injudge = injudge;
     }
 
-    public String getInTime() {
+    public Date getInTime() {
         return inTime;
     }
 
-    public void setInTime(String inTime) {
-        this.inTime = inTime == null ? null : inTime.trim();
+    public void setInTime(Date inTime) {
+        this.inTime = inTime;
     }
 
-    public String getLeftTime() {
+    public Date getLeftTime() {
         return leftTime;
     }
 
-    public void setLeftTime(String leftTime) {
-        this.leftTime = leftTime == null ? null : leftTime.trim();
+    public void setLeftTime(Date leftTime) {
+        this.leftTime = leftTime;
     }
 
     public String getRt() {
@@ -79,12 +81,12 @@ public class Visit {
         this.visitedTimes = visitedTimes;
     }
 
-    public String getBeat() {
+    public Date getBeat() {
         return beat;
     }
 
-    public void setBeat(String beat) {
-        this.beat = beat == null ? null : beat.trim();
+    public void setBeat(Date beat) {
+        this.beat = beat;
     }
 
     public Date getLastInTime() {
@@ -101,5 +103,13 @@ public class Visit {
 
     public void setMac(String mac) {
         this.mac = mac == null ? null : mac.trim();
+    }
+
+    public Integer getRssi() {
+        return rssi;
+    }
+
+    public void setRssi(Integer rssi) {
+        this.rssi = rssi;
     }
 }

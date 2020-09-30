@@ -1,5 +1,7 @@
 package zhbit.za102.bean;
 
+import java.util.Date;
+
 public class Machine {
     private Integer mid;
 
@@ -11,7 +13,7 @@ public class Machine {
 
     private Integer leastrssi;
 
-    private String beat;
+    private Date beat;
 
     private String x;
 
@@ -57,12 +59,12 @@ public class Machine {
         this.leastrssi = leastrssi;
     }
 
-    public String getBeat() {
+    public Date getBeat() {
         return beat;
     }
 
-    public void setBeat(String beat) {
-        this.beat = beat == null ? null : beat.trim();
+    public void setBeat(Date beat) {
+        this.beat = beat;
     }
 
     public String getX() {

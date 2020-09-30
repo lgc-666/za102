@@ -1,5 +1,7 @@
 package zhbit.za102.bean;
 
+import java.util.Date;
+
 public class Location {
     private Integer locationid;
 
@@ -11,7 +13,7 @@ public class Location {
 
     private String y;
 
-    private String beat;
+    private Date beat;
 
     public Integer getLocationid() {
         return locationid;
@@ -53,11 +55,11 @@ public class Location {
         this.y = y == null ? null : y.trim();
     }
 
-    public String getBeat() {
+    public Date getBeat() {
         return beat;
     }
 
-    public void setBeat(String beat) {
-        this.beat = beat == null ? null : beat.trim();
+    public void setBeat(Date beat) {
+        this.beat = beat;
     }
 }
