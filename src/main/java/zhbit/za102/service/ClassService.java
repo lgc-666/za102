@@ -50,4 +50,8 @@ public class ClassService {
         PageInfo<Class> page = new PageInfo<>(us);
         return new Msg(page);
     }
+
+    public List<String> findAllClass(){
+        return classMapper.findAllClass();
+    }
 }

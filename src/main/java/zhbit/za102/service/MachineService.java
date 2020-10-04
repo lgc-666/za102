@@ -46,6 +46,12 @@ public class MachineService {
         return machineMapper.selectByExample(example);
     }
 
+    public List<Machine> listAll() {
+        MachineExample example = new MachineExample();
+        example.setOrderByClause("mid");
+        return machineMapper.selectByExample(example);
+    }
+
     @Cacheable(value="Machine",key = "'list'+'-'+#start+'-'+#size")
     public Msg list(int start, int size) {
         //start是当前第几页，size是每页显示几条，设置id倒排序

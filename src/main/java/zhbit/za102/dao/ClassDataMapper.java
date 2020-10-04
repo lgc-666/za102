@@ -31,4 +31,6 @@ public interface ClassDataMapper {
 
     Integer selectWithin1hour();
     Integer selectWithin1hourByClass();
+    void updateWithin1hour(@Param("hours")Integer hours,@Param("num")Integer num);
+    void insertClassData (@Param("address")String address,@Param("hours")Integer hours);
 }

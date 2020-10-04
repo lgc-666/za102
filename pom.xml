@@ -45,6 +45,13 @@
             </exclusions>
         </dependency>
 
+        <!--矩阵运算-->
+        <dependency>
+            <groupId>gov.nist.math</groupId>
+            <artifactId>jama</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
         <!-- mybatis逆向工程jar包 -->
         <dependency>
             <groupId>org.mybatis.generator</groupId>

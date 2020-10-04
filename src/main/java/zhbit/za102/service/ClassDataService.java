@@ -54,11 +54,14 @@ public class ClassDataService {
         return new Msg(page);
     }
 
+
     public Integer selectWithin1hour(){
         return classDataMapper.selectWithin1hour();
     }
     public Integer selectWithin1hourByClass(){
         return classDataMapper.selectWithin1hourByClass();
     }
+    public void updateWithin1hour(Integer hours,Integer num){ classDataMapper.updateWithin1hour(hours,num); }
+    public void insertClassData(String address,Integer hours){ classDataMapper.insertClassData(address,hours); }
 
 }

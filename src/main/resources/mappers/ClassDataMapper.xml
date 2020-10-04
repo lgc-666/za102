@@ -19,8 +19,25 @@
     select count(*) from class_data where updatetime>=(NOW() - interval 1 hour)
   </select>
   <select id="selectWithin1hourByClass" resultType="java.lang.Integer" >
-    select count(*) from class_data where address = #{address} and updatetime>=(NOW() - interval 1 hour)
+    select count(*) from class_data where adress = #{address} and updatetime>=(NOW() - interval 1 hour)
   </select>
+
+  <!--差值小于1小时则进行更新-->
+  <update id="updateWithin1hour" >
+        UPDATE
+        class_data
+        SET
+        updatetime = CURRENT_TIMESTAMP, hours = #{hours}
+        WHERE
+        id in (select id from (select * from class_data ORDER BY updatetime desc LIMIT #{num})as t)
+  </update>
+  <!--差值大于1小时进行插入-->
+  <insert id="insertClassData">
+        insert into class_data
+        (adress,new_student,in_class_number,jump_out,class_now_number,hour_class_number,hour_in_class_number,updatetime,hours)
+        values
+        (#{address},0,0,0,0,0,0,CURRENT_TIMESTAMP,#{hours})
+  </insert>
 
 
   <sql id="Example_Where_Clause">

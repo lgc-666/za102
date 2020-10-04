@@ -2,8 +2,12 @@ package zhbit.za102.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import zhbit.za102.bean.Machine;
 import zhbit.za102.bean.Msg;
 import zhbit.za102.service.MachineService;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 @RestController
@@ -39,7 +43,10 @@ public class MachineController {
             Machine c=machineService.get(mid);
             c.setAdress(adress);
             c.setMachineid(machineid);
-            c.setBeat(beat);
+            //String转成Date
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = sdf.parse(beat);
+            c.setBeat(date);
             if(leastRssi!=null){
                 c.setLeastrssi(leastRssi);
             }
@@ -60,7 +67,10 @@ public class MachineController {
             Machine c=new Machine();
             c.setAdress(adress);
             c.setMachineid(machineid);
-            c.setBeat(beat);
+            //String转成Date
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = sdf.parse(beat);
+            c.setBeat(date);
             c.setLeastrssi(leastRssi);
             c.setX(x);
             c.setY(y);

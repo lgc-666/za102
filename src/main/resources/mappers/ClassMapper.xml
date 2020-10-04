@@ -10,6 +10,11 @@
     <result column="y2" jdbcType="VARCHAR" property="y2" />
     <result column="stopJudge" jdbcType="INTEGER" property="stopjudge" />
   </resultMap>
+
+  <select id="findAllClass" resultType="java.lang.String" >
+    select adress from class
+  </select>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
