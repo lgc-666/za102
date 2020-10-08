@@ -54,4 +54,10 @@ public class ClassService {
     public List<String> findAllClass(){
         return classMapper.findAllClass();
     }
+
+    public List<Class> listbyaddress(String addressname) {
+        ClassExample example = new ClassExample();
+        example.createCriteria().andAdressEqualTo(addressname);
+        return classMapper.selectByExample(example);
+    }
 }

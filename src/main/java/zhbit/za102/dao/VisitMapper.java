@@ -1,5 +1,6 @@
 package zhbit.za102.dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -28,4 +29,12 @@ public interface VisitMapper {
     int updateByPrimaryKeySelective(Visit record);
 
     int updateByPrimaryKey(Visit record);
+
+    void updateCustomer(@Param("mac")String mac, @Param("rssi")Integer rssi, @Param("first_in_time") Timestamp first_in_time, @Param("latest_in_time")Timestamp latest_in_time, @Param("beat")Timestamp beat, @Param("inJudge")Integer inJudge, @Param("visited_times")Integer visited_times, @Param("last_in_time")Timestamp last_in_time,@Param("rt")String rt);
+
+    List<String> searchExtraJumpOut();
+
+    void updateInjudge();
+
+    void deleteExpiredCustomer();
 }

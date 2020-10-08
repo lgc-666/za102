@@ -33,4 +33,10 @@ public interface ClassDataMapper {
     Integer selectWithin1hourByClass();
     void updateWithin1hour(@Param("hours")Integer hours,@Param("num")Integer num);
     void insertClassData (@Param("address")String address,@Param("hours")Integer hours);
+    void updateClassData(@Param("address")String address,@Param("newStudent")Integer newStudent,@Param("inClassNumber")Integer inClassNumber,@Param("hourInClassNumber")Integer hourInClassNumber);
+    //查询当前小时进店量
+    Integer searchNowHour_in_customer_number(@Param("address")String address);
+    //存储跳出量、动态当前客流量和小时客流量
+    void updateDataThread(@Param("address") String address,@Param("dynamic_customer")Integer dynamic_customer,@Param("jumpOut_customer")Integer jumpOut_customer,@Param("subHour_customer")Integer subHour_customer);
+
 }

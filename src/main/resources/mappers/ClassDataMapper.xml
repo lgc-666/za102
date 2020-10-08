@@ -39,6 +39,30 @@
         (#{address},0,0,0,0,0,0,CURRENT_TIMESTAMP,#{hours})
   </insert>
 
+  <!--倒序排序更新最新的那一条-->
+  <update id="updateClassData" >
+        UPDATE
+        class_data
+        SET
+        new_student = new_student+#{newStudent},in_class_number =in_class_number+#{inClassNumber},hour_in_class_number = hour_in_class_number+#{hourInClassNumber}}
+        WHERE
+        id in (select id from (select * from class_data where adress=#{address} ORDER BY updatetime desc LIMIT 1)as t)
+ </update>
+
+  <!--根据区域名搜索该区域的小时进入区域数量-->
+  <select id="searchNowHour_in_customer_number" resultType="java.lang.Integer" >
+    select hour_in_class_number from class_data where id in (select id from (select * from class_data where adress=#{address} ORDER BY updatetime desc LIMIT 1)as t)
+  </select>
+
+  <!--更新跳出量、动态当前客流量和小时客流量-->
+  <update id="updateDataThread" >
+        UPDATE
+        shop_data
+        SET
+        class_now_number = #{dynamic_customer},jump_out =jump_out+#{jumpOut_customer},hour_class_number = #{subHour_customer}
+        WHERE
+        id in (select id from (select * from class_data where adress=#{address} ORDER BY updatetime desc LIMIT 1)as t)
+  </update>
 
   <sql id="Example_Where_Clause">
     <where>

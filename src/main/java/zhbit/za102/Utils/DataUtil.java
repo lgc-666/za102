@@ -1,8 +1,10 @@
 package zhbit.za102.Utils;
 
 import Jama.Matrix;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import zhbit.za102.bean.Class;
 import zhbit.za102.bean.Machine;
 import zhbit.za102.bean.StopVisit;
 import zhbit.za102.bean.Visit;
@@ -27,6 +29,8 @@ public class DataUtil {
     ClassService classService;
     @Autowired
     MachineService machineService;
+    @Autowired
+    LocationService locationService;
 
     Map<String,Object> macMap;
     Map<String,Object> submacMap;
@@ -46,9 +50,9 @@ public class DataUtil {
      * @param mac
      * @return
      */
-    public  boolean checkExist(String mac){
+    public  boolean checkExist(String mac,String address){
         //先看缓存有没有，没有就到数据库去找，数据库有就放入缓存
-        if ((redisUtil.hget("visit",mac)!=null)||(redisUtil.hget("stopvisit",mac)!=null))
+        if ((redisUtil.hget("visit",mac+'-'+address)!=null)||(redisUtil.hget("stopvisit",mac+'-'+address)!=null))
             return true;
         else{
             List<Visit> visits = visitService.findvisitByMac(mac);
@@ -68,11 +72,11 @@ public class DataUtil {
     }
 
     /**存AP发来的mac值到缓存(键--项--值)**/
-    public void cacheMac(String address, Integer inJudge, Date in_time, Date left_time, String rt, Integer visited_times, Date beat, Date last_in_time, String mac, Integer riss){
+    public void cacheMac(String address, Integer inJudge, Date in_time, Date left_time, String rt, Integer visited_times, Date beat, Date last_in_time, String mac, Integer rssi){
         macMap = new HashMap<>();
         submacMap = new HashMap<>();
         submacMap.put("mac",mac);
-        submacMap.put("riss",riss);
+        submacMap.put("rssi",rssi);
         submacMap.put("address",address);
         submacMap.put("inJudge",inJudge);
         submacMap.put("in_time",in_time);
@@ -81,14 +85,14 @@ public class DataUtil {
         submacMap.put("visited_times",visited_times);
         submacMap.put("beat",beat);
         submacMap.put("last_in_time",last_in_time);
-        macMap.put(mac,submacMap);
+        macMap.put(mac+'-'+address,submacMap);
         redisUtil.hmset("visit",macMap);
     }
-    public void cacheStopMac(String address, Integer inJudge, Date in_time, Date left_time, String rt, Integer visited_times, Date beat, Integer handleJudge, String mac, Integer riss){
+    public void cacheStopMac(String address, Integer inJudge, Date in_time, Date left_time, String rt, Integer visited_times, Date beat, Integer handleJudge, String mac, Integer rssi){
         macMap = new HashMap<>();
         submacMap = new HashMap<>();
         submacMap.put("mac",mac);
-        submacMap.put("riss",riss);
+        submacMap.put("rssi",rssi);
         submacMap.put("address",address);
         submacMap.put("inJudge",inJudge);
         submacMap.put("in_time",in_time);
@@ -97,18 +101,18 @@ public class DataUtil {
         submacMap.put("visited_times",visited_times);
         submacMap.put("beat",beat);
         submacMap.put("handleJudge",handleJudge);
-        macMap.put(mac,submacMap);
+        macMap.put(mac+'-'+address,submacMap);
         redisUtil.hmset("stopvisit",macMap);
     }
 
     //向普通区域表插数值
-    public boolean insertMac(String address, Integer inJudge, Integer visited_times, String mac, Integer riss){
+    public boolean insertMac(String address, Integer inJudge, Integer visited_times, String mac, Integer rssi){
         //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
         //String dt = df.format(new Date());// 获取当前系统时间并格式化
         dt = new Timestamp(System.currentTimeMillis());
         Visit u = new Visit();
         u.setMac(mac);
-        u.setRssi(riss);
+        u.setRssi(rssi);
         u.setAddress(address);
         u.setInjudge(inJudge);
         u.setInTime(dt);
@@ -120,17 +124,17 @@ public class DataUtil {
         //插入数据库
         visitService.add(u);
         //插入redis缓存
-        cacheMac(address,inJudge,dt,dt,"0",visited_times,dt,dt,mac,riss);
+        cacheMac(address,inJudge,dt,dt,"0",visited_times,dt,dt,mac,rssi);
         return true;
     }
     //向禁止区域表插数值
-    public boolean insertStopMac(String address, Integer inJudge, Integer visited_times, String mac, Integer riss){
+    public boolean insertStopMac(String address, Integer inJudge, Integer visited_times, String mac, Integer rssi){
         //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
         //String dt = df.format(new Date());// 获取当前系统时间并格式化
         dt = new Timestamp(System.currentTimeMillis());
         StopVisit u = new StopVisit();
         u.setMac(mac);
-        u.setRssi(riss);
+        u.setRssi(rssi);
         u.setAddress(address);
         u.setInjudge(inJudge);
         u.setInTime(dt);
@@ -142,11 +146,11 @@ public class DataUtil {
         //插入数据库
         stopVisitService.add(u);
         //插入redis缓存
-        cacheStopMac(address,inJudge,dt,dt,"0",visited_times,dt,0,mac,riss);
+        cacheStopMac(address,inJudge,dt,dt,"0",visited_times,dt,0,mac,rssi);
         return true;
     }
 
-    //初始化区域数据统计表
+    //初始化区域数据统计表：针对tomcat关闭2小时后启动和tomcat关闭一下又启动的场景
     public boolean initClassData(){
         if (classDataService.selectWithin1hour()==0){  //当前时间和更新时间的差不在1小时内则插入（大于1小时）
             insertClassData();
@@ -173,35 +177,35 @@ public class DataUtil {
     }
 
     //获取普通区域的相应mac的用户信息（先找缓存，缓存没有则找数据库并插入到缓存）
-    public Map<String,Object> getMacMap(String mac)
+    public Map<String,Object> getMacMap(String mac,String address)
     {
-        if (redisUtil.hget("visit",mac)!=null)
-            return (Map)redisUtil.hget("visit",mac);
+        if (redisUtil.hget("visit",mac+'-'+address)!=null)
+            return (Map)redisUtil.hget("visit",mac+'-'+address);
         else{
             List<Visit> visits = visitService.findvisitByMac(mac);
             cacheMac(visits.get(0).getAddress(),visits.get(0).getInjudge(),visits.get(0).getInTime(),visits.get(0).getLeftTime(),visits.get(0).getRt(),visits.get(0).getVisitedTimes(),visits.get(0).getBeat(),visits.get(0).getLastInTime(),visits.get(0).getMac(),visits.get(0).getRssi());
-            return (Map)redisUtil.hget("visit",mac);
+            return (Map)redisUtil.hget("visit",mac+'-'+address);
         }
     }
     //获取禁止区域的相应mac的用户信息（先找缓存，缓存没有则找数据库并插入到缓存）
-    public Map<String,Object> getStopMacMap(String mac)
+    public Map<String,Object> getStopMacMap(String mac,String address)
     {
-        if (redisUtil.hget("stopvisit",mac)!=null)
-            return (Map)redisUtil.hget("stopvisit",mac);
+        if (redisUtil.hget("stopvisit",mac+'-'+address)!=null)
+            return (Map)redisUtil.hget("stopvisit",mac+'-'+address);
         else{
             List<StopVisit> stopvisits = stopVisitService.findstopVisitByMac(mac);
             cacheStopMac(stopvisits.get(0).getAddress(),stopvisits.get(0).getInjudge(),stopvisits.get(0).getInTime(),stopvisits.get(0).getLeftTime(),stopvisits.get(0).getRt(),stopvisits.get(0).getVisitedTimes(),stopvisits.get(0).getBeat(),stopvisits.get(0).getHandlejudge(),stopvisits.get(0).getMac(),stopvisits.get(0).getRssi());
-            return (Map)redisUtil.hget("stopvisit",mac);
+            return (Map)redisUtil.hget("stopvisit",mac+'-'+address);
         }
     }
 
     //更新普通区域的缓存信息
-    public void refreshMacCache(String mac,Map macMap){
-        redisUtil.hset("visit",mac,macMap);
+    public void refreshMacCache(String mac,String address,Map macMap){
+        redisUtil.hset("visit",mac+'-'+address,macMap);
     }
     //更新禁止区域的缓存信息
-    public void refreshStopMacCache(String mac,Map stopmacMap){
-        redisUtil.hset("stopvisit",mac,stopmacMap);
+    public void refreshStopMacCache(String mac,String address,Map stopmacMap){
+        redisUtil.hset("stopvisit",mac+'-'+address,stopmacMap);
     }
 
     //设备缓存初始化（把已在后台管理系统添加了的设备放到缓存中）
@@ -281,7 +285,7 @@ public class DataUtil {
             }
     }
 
-    /**利用RSSI得到设备距AP的水平距离(单位：米)**/
+    /**利用RSSI得到设备距AP的距离(单位：米)**/
     //A为距离探测设备1m时的rssi值的绝对值，最佳范围在45-49之间
     //n为环境衰减因子，需要测试矫正，最佳范围在3.25-4.5之间
     public double GetDisFromRSSI(Integer rssi)
@@ -362,4 +366,37 @@ public class DataUtil {
         point.put("macy",y2);
         return  point;
     }
+
+    //根据区域x、y的范围值，判断在哪个区域,MinX-->MaxX,MinY-->MaxY
+    public String judgeClass(Integer x,Integer y){
+        String atAdress = null;
+        Integer MinX=null;
+        Integer MaxX=null;
+        Integer MinY=null;
+        Integer MaxY=null;
+        List<Class> classes = classService.list();
+        for(Class c:classes){
+            List<String> list1 = Arrays.asList(StringUtils.split(c.getX1(), ","));
+            List<String> list2 = Arrays.asList(StringUtils.split(c.getX2(), ","));
+            List<String> list3 = Arrays.asList(StringUtils.split(c.getY1(), ","));
+            List<String> listX1 = new ArrayList<>(list1);
+            List<String> listX2 = new ArrayList<>(list2);
+            List<String> listY1 = new ArrayList<>(list3);
+            MinX=Integer.valueOf(listX1.get(0));
+            MinY=Integer.valueOf(listX1.get(1));
+            MaxX=Integer.valueOf(listX2.get(0));
+            MaxY=Integer.valueOf(listY1.get(1));
+            if(MinX<x && x<MaxX && MinY<y && y<MaxY){
+                atAdress=c.getAdress();
+            }
+        }
+        return atAdress;
+    }
+
+    //根据区域名，判断是否为禁止区域
+    public Integer Stopjudge(String addressname){
+        return classService.listbyaddress(addressname).get(0).getStopjudge();
+    }
+
+    //人的位置记录
 }
