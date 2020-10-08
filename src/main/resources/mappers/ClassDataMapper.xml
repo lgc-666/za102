@@ -57,12 +57,28 @@
   <!--更新跳出量、动态当前客流量和小时客流量-->
   <update id="updateDataThread" >
         UPDATE
-        shop_data
+        class_data
         SET
         class_now_number = #{dynamic_customer},jump_out =jump_out+#{jumpOut_customer},hour_class_number = #{subHour_customer}
         WHERE
         id in (select id from (select * from class_data where adress=#{address} ORDER BY updatetime desc LIMIT 1)as t)
   </update>
+
+  <!--更新遗漏的跳出量-->
+  <update id="updateExtraJumpOut">
+      UPDATE
+      class_data
+      SET
+      jump_out =jump_out+1
+      WHERE
+      id in (select id from (select * from class_data where adress=#{address} ORDER BY updatetime desc LIMIT 1)as t)
+  </update>
+
+  <!--删除三个月前的数据-->
+  <delete id="deleteExpiredShop_data">
+        delete from class_data where updatetime &lt; DATE_SUB(CURDATE(),INTERVAL 3 MONTH)
+  </delete>
+
 
   <sql id="Example_Where_Clause">
     <where>

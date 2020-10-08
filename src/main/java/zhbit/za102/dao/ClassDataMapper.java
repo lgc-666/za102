@@ -39,4 +39,6 @@ public interface ClassDataMapper {
     //存储跳出量、动态当前客流量和小时客流量
     void updateDataThread(@Param("address") String address,@Param("dynamic_customer")Integer dynamic_customer,@Param("jumpOut_customer")Integer jumpOut_customer,@Param("subHour_customer")Integer subHour_customer);
 
+    void updateExtraJumpOut(@Param("address")String address);
+    void deleteExpiredShop_data();
 }

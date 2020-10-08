@@ -14,6 +14,34 @@
     <result column="mac" jdbcType="VARCHAR" property="mac" />
     <result column="rssi" jdbcType="INTEGER" property="rssi" />
   </resultMap>
+
+  <update id="updateCustomer">
+        UPDATE
+        stop_visit
+        SET
+        rssi = #{rssi},in_time = #{first_in_time},left_time = #{latest_in_time},beat = #{beat},inJudge = #{inJudge},visited_times = #{visited_times},handleJudge = #{handleJudge},rt = #{rt}
+        WHERE
+        mac = #{mac}
+  </update>
+
+
+  <select id="searchExtraJumpOut" resultType="java.lang.String">
+        select address from stop_visit where (TIMESTAMPDIFF(MINUTE, left_time, CURRENT_TIMESTAMP))>5 and inJudge = 1;
+  </select>
+
+  <update id="updateInjudge">
+        UPDATE
+        stop_visit
+        SET
+        inJudge = 0
+        WHERE
+        (TIMESTAMPDIFF(MINUTE, left_time, CURRENT_TIMESTAMP))>5 and inJudge = 1;
+  </update>
+
+  <delete id="deleteExpiredCustomer">
+        delete from stop_visit where beat &lt; DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+  </delete>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">

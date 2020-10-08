@@ -26,20 +26,20 @@
 
 
   <select id="searchExtraJumpOut" resultType="java.lang.String">
-        select address from customer where (TIMESTAMPDIFF(MINUTE, latest_in_time, CURRENT_TIMESTAMP))>15 and inJudge = 1;
+        select address from visit where (TIMESTAMPDIFF(MINUTE, left_time, CURRENT_TIMESTAMP))>5 and inJudge = 1;
   </select>
 
   <update id="updateInjudge">
         UPDATE
-        customer
+        visit
         SET
         inJudge = 0
         WHERE
-        (TIMESTAMPDIFF(MINUTE, latest_in_time, CURRENT_TIMESTAMP))>15 and inJudge = 1;
+        (TIMESTAMPDIFF(MINUTE, left_time, CURRENT_TIMESTAMP))>5 and inJudge = 1;
   </update>
 
   <delete id="deleteExpiredCustomer">
-        delete from customer where beat &lt; DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+        delete from visit where beat &lt; DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
   </delete>
 
 
