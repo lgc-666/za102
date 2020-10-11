@@ -1,9 +1,12 @@
 package zhbit.za102;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,10 +18,12 @@ import zhbit.za102.dao.ClassDataMapper;
 import zhbit.za102.dao.StopVisitMapper;
 import zhbit.za102.dao.VisitMapper;
 
+import javax.annotation.Resource;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.sql.Timestamp;
 import java.util.*;
+
 
 @Component
 public class DataProcessor implements CommandLineRunner {
@@ -64,7 +69,10 @@ public class DataProcessor implements CommandLineRunner {
     //小时进入区域数量
     private Integer hour_in_class_number = 0;
 
-    @Autowired
+    private String lastmachineid="";
+    private String nowmachineid="";
+
+    @Resource
     RedisUtils redisUtil;
     @Autowired
     DataUtil dataUtil;
@@ -86,48 +94,68 @@ public class DataProcessor implements CommandLineRunner {
             //初始化设备表区域数据表，将表数据放缓存中（特别注意初始化后只有4条，想要后续每小时插入4条进行数据统计，就要用到异步线程的定时操作）
             dataUtil.refreshMachineCache();
             dataUtil.initClassData();
-
+            System.out.println("初始化完成");
             while (true) {
                 //synchronized关键字是用来控制线程同步的，就是在多线程的环境下，控制synchronized代码段不被多个线程同时执行
                 synchronized (this) {
                     try {
                         //获取wifi探针数据
                         ds.receive(dp);
-                        strReceive = new String(dp.getData(), 0, dp.getLength());
+                        strReceive = new String(dp.getData());
+                        System.out.println("接收到的值："+strReceive);
                         //转成json对象取值
-                        jsonObject = JSONObject.parseObject(strReceive);
+                        jsonObject = JSON.parseObject(strReceive);
                         if (jsonObject != null) {
                             //把数据初步分析出来
-                            machineId = jsonObject.getString("Id").toString();
+                            machineId = jsonObject.getString("Id");
                             data = jsonObject.getString("Data");
+                            System.out.println("machineId："+machineId);
+                            System.out.println("设备id是否匹配格式要求："+machineId.matches(idM));
                             if (data != null) {
                                 jsonArray = JSONArray.parseArray(data);
-                            } else
+                                System.out.println("jsonArray："+jsonArray);
+                            }
+                            else{
+                                System.out.println("继续循环");
                                 continue;
+                            }
+
+                            dataUtil.get(machineId);
                             //如果设备在后台管理系统没有被添加,则不接受处理
-                            if (machineId.matches(idM) && redisUtil.hget("machineAp", machineId) != null) {
-                                //更新设备beat;
+                            if (machineId.matches(idM) && dataUtil.getmachineAP(machineId) != null) {
+                                System.out.println("更新设备beat");
                                 dataUtil.refreshMachineCacheBeat(machineId);
                                 System.out.println("进来进行处理");
                                 dataSize = jsonArray.size();/**分析各个mac的数据，拆分data值**/
-                                APcount += 1;
+
+                                nowmachineid=machineId;
+
+                                System.out.println("nowmachineid："+nowmachineid);
+                                System.out.println("lastmachineid："+lastmachineid);
+                                if(!nowmachineid.equals(lastmachineid)) {   //判断4台均为不同的设备
+                                    APcount += 1;
+                                    System.out.println("APcount："+APcount);
+                                }
                                 for (int i = 0; i < dataSize; i++) {
                                     jsonObjectData = jsonArray.getJSONObject(i);
-                                    mac = jsonObjectData.getString("mac");
+                                    mac = jsonObjectData.getString("mac").toString();
                                     rssi = jsonObjectData.getInteger("rssi");
+                                    System.out.println("mac和rssi："+mac+"-"+rssi);
                                     //筛选
-                                    if (mac != null && mac.matches(macM) && rssi != null && rssi.toString().matches(rssiM) && !mac.startsWith("00:00") && rssi > (Integer) ((Map) redisUtil.hget("machineAp", machineId)).get("leastRssi")) {
-                                        System.out.println("进来了");
+                                    if (mac != null && mac.matches(macM) && rssi != null && rssi.toString().matches(rssiM) && !mac.startsWith("00:00") && rssi > (Integer) ((Map) redisUtil.hget("machineAP", machineId)).get("leastRssi")) {
+                                        System.out.println("进来了！！");
                                         //设置mac-machine-rssi缓存（key--项--值）：再次插入的缓存中当key、项相同时会把值覆盖掉（当人不断发生位移时，同一个AP收到同一个人的rssi信号每次都会不同的场景）。HSET过去只能设置一个键值对，如果需要一次设置多个，则必须使用HMSET（M表示多重）
                                         redisUtil.hset(mac, machineId, rssi);
-                                    } else
+                                    } else{
+                                        System.out.println("继续循环");
                                         continue;
-                                    if (APcount <= 3 || APcount == 0 || redisUtil.hmget(mac).size() <= 3) {  //AP<=3或缓存中的键值对<=3
-                                        continue;  //继续循环，跳过本次循环体中余下尚未执行的语句，立即进行下一次的循环条件
-                                    } else { //该mac至少有4个rssi了
+                                    }
+
+                                      if(APcount >3 && redisUtil.hmget(mac).size() > 3) { //该mac至少有4个rssi了 ,AP>3或缓存中的键值对>3
                                         /**开始计算（x,y）**/
                                         //取mac缓存中rssi信号最强的前4个计算
-                                        Map<Object, Object> map = redisUtil.hmget(mac);  //由项返回多个键值对
+                                        System.out.println("开始计算（x,y）");
+                                        Map<String, Object> map = redisUtil.hmget(mac);  //由项返回多个键值对
                                         List<Map.Entry<String, Integer>> list = new LinkedList(map.entrySet());
                                         // 下面的也可以写成lambda表达式这种形式：Collections.sort(list, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
                                         Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
@@ -140,7 +168,7 @@ public class DataProcessor implements CommandLineRunner {
                                         List<Map<String, Object>> aplist = new ArrayList<>();
                                         for (Map.Entry<String, Integer> p : list.subList(0, 4)) {  //key：设备id，值：rssi
                                             System.out.println(p.getKey() + " " + p.getValue());
-                                            aplist.add((Map) redisUtil.hget("machineAp", p.getKey()));//返回的是value
+                                            aplist.add((Map) redisUtil.hget("machineAP", p.getKey()));//返回的是value
                                         }
                                         //进行4选3排列AP组合
                                         dataUtil.reSort(aplist, 3, 0, 0);
@@ -155,10 +183,13 @@ public class DataProcessor implements CommandLineRunner {
                                             totalY += respoint.get("y");
                                         }
                                         macpoint = dataUtil.cpoint(totalX, totalY);
+                                        System.out.println("人的位置坐标"+macpoint);
                                         //根据区域x、y的范围值，判断在哪个区域
                                         atAddress = dataUtil.judgeClass(macpoint.get("macx"), macpoint.get("macy"));
+                                        System.out.println("人所在区域："+atAddress);
                                         //根据区域名判断是否为禁止区域
                                         StopJudege = dataUtil.Stopjudge(atAddress);
+                                        System.out.println("是否为禁止区域："+StopJudege);
                                         //当前时间戳
                                         latest_time = new Timestamp(System.currentTimeMillis());
                                         /**先判断是否存在，注意：同一个区域的同一个mac用更新方式，否则插入**/
@@ -215,18 +246,36 @@ public class DataProcessor implements CommandLineRunner {
                                                 macMap.put("rssi", rssi);
                                                 //更新cache信息
                                                 dataUtil.refreshStopMacCache(mac,atAddress, macMap);
+                                                System.out.println("更新cache信息完成！");
                                             }
                                         }
                                     }
+                                      else {
+                                          System.out.println("不满足不同AP的4个rssi的条件");
+                                          continue;  //继续循环，跳过本次循环体中余下尚未执行的语句，立即进行下一次的循环条件
+                                      }
                                 }
                                 //这里更新
-                                if (new_student != 0 || in_class_number != 0 || hour_in_class_number != 0) {
-                                    classDataMapper.updateClassData(atAddress, new_student, in_class_number, hour_in_class_number);//倒序排序更新最新的那条
+                                if(atAddress!=null){
+                                    if (new_student != 0 || in_class_number != 0 || hour_in_class_number != 0 ) {
+                                        classDataMapper.updateClassData(atAddress, new_student, in_class_number, hour_in_class_number);//倒序排序更新最新的那条
+                                    }
                                 }
+
+                                System.out.println("更新统计数据值完成");
                                 new_student = 0;
                                 in_class_number = 0;
                                 hour_in_class_number = 0;
+
+                                lastmachineid=nowmachineid;
+                                if(APcount>3){
+                                    APcount = 0; //记得将数据清0，否则会一直累加
+                                }
                             }
+                            else{
+                                System.out.println("设备在后台没添加");
+                            }
+
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -243,7 +292,7 @@ public class DataProcessor implements CommandLineRunner {
     }
 
 
-    //此进程用于存储跳出量、动态当前客流量和小时客流量(异步执行线程，因为切换快给人感觉像同时进行一样)
+    //此进程用于存储跳出量、动态当前客流量和小时客流量(异步执行进程，因为切换快给人感觉像同时进行一样)
     @Transactional
     @Async
     @Scheduled(cron = "0/5 * * * * ?")
@@ -259,10 +308,10 @@ public class DataProcessor implements CommandLineRunner {
 
         Map<String, Object> countExtraMap = new HashMap<>();
         Map<String, Integer> subCountExtraMap;
-        Map<Object, Object> subCustomerMap = redisUtil.hmget("visit");
+        Map<String, Object> subCustomerMap = redisUtil.hmget("visit");
         latest_time = new Timestamp(System.currentTimeMillis());
         //普通区域
-        for (Map.Entry<Object, Object> subCustomerMap_1 : subCustomerMap.entrySet()) {
+        for (Map.Entry<String, Object> subCustomerMap_1 : subCustomerMap.entrySet()) {
             Object subMac = subCustomerMap_1.getKey();
             Map<String, Object> subCustomerMap_2 = (Map) redisUtil.hget("visit", (String) subMac);
             //时间间隔
@@ -276,6 +325,7 @@ public class DataProcessor implements CommandLineRunner {
                 }
                 subCustomerMap_2.put("inJudge", 0); //不在区域内
                 subCustomerMap_2.put("rt", stayTime.toString()); //停留时间
+                dynamic_customer = -1; //现存人数-1
             }
             else if (countTime < 5 && (Integer) subCustomerMap_2.get("inJudge") == 1) { //人在室内
                 dynamic_customer = 1; //现存人数+1
@@ -314,8 +364,8 @@ public class DataProcessor implements CommandLineRunner {
         }
 
         //遍历更新设备状态缓存
-        Map<Object,Object> machineMap = redisUtil.hmget("machineAp");
-        for (Map.Entry<Object, Object> subMachineMap:machineMap.entrySet()) {
+        Map<String,Object> machineMap = redisUtil.hmget("machineAP");
+        for (Map.Entry<String, Object> subMachineMap:machineMap.entrySet()) {
             String subMachineId = (String) subMachineMap.getKey();
             Map<String,Object> subMachineMap_1 = (Map)subMachineMap.getValue();
             Integer machineCountTime = new Long((latest_time.getTime() - (Long)subMachineMap_1.get("beat")) / (60*1000)).intValue();
@@ -323,7 +373,7 @@ public class DataProcessor implements CommandLineRunner {
                 subMachineMap_1.put("status","离线");
             else
                 subMachineMap_1.put("status","在线");
-            redisUtil.hset("machineAp",subMachineId,subMachineMap_1);
+            redisUtil.hset("machineAP",subMachineId,subMachineMap_1);
         }
     }
 
@@ -342,10 +392,10 @@ public class DataProcessor implements CommandLineRunner {
 
         Map<String, Object> countExtraMap2 = new HashMap<>();
         Map<String, Integer> subCountExtraMap2;
-        Map<Object, Object> subCustomerMap2 = redisUtil.hmget("stopvisit");
+        Map<String, Object> subCustomerMap2 = redisUtil.hmget("stopvisit");
         latest_time = new Timestamp(System.currentTimeMillis());
         //禁止区域
-        for (Map.Entry<Object, Object> subCustomerMap_1 : subCustomerMap2.entrySet()) {
+        for (Map.Entry<String, Object> subCustomerMap_1 : subCustomerMap2.entrySet()) {
             Object subMac = subCustomerMap_1.getKey();
             Map<String, Object> subCustomerMap_2 = (Map) redisUtil.hget("stopvisit", (String) subMac);
             //时间间隔
@@ -359,6 +409,7 @@ public class DataProcessor implements CommandLineRunner {
                 }
                 subCustomerMap_2.put("inJudge", 0); //不在区域内
                 subCustomerMap_2.put("rt", stayTime.toString()); //停留时间
+                dynamic_customer2 = -1; //现存人数-1
             }
             else if (countTime < 5 && (Integer) subCustomerMap_2.get("inJudge") == 1) { //人在室内
                 dynamic_customer2 = 1; //现存人数+1
@@ -397,8 +448,8 @@ public class DataProcessor implements CommandLineRunner {
         }
 
         //遍历更新设备状态缓存
-        Map<Object,Object> machineMap = redisUtil.hmget("machineAp");
-        for (Map.Entry<Object, Object> subMachineMap:machineMap.entrySet()) {
+        Map<String,Object> machineMap = redisUtil.hmget("machineAP");
+        for (Map.Entry<String, Object> subMachineMap:machineMap.entrySet()) {
             String subMachineId = (String) subMachineMap.getKey();
             Map<String,Object> subMachineMap_1 = (Map)subMachineMap.getValue();
             Integer machineCountTime = new Long((latest_time.getTime() - (Long)subMachineMap_1.get("beat")) / (60*1000)).intValue();
@@ -406,7 +457,7 @@ public class DataProcessor implements CommandLineRunner {
                 subMachineMap_1.put("status","离线");
             else
                 subMachineMap_1.put("status","在线");
-            redisUtil.hset("machineAp",subMachineId,subMachineMap_1);
+            redisUtil.hset("machineAP",subMachineId,subMachineMap_1);
         }
     }
 
@@ -416,9 +467,9 @@ public class DataProcessor implements CommandLineRunner {
     @Scheduled(cron = "0 0 0/1 * * ?")
     public void saveDataThread(){
         //普通区域
-        Map<Object,Object> subCustomerMap = redisUtil.hmget("visit");
+        Map<String,Object> subCustomerMap = redisUtil.hmget("visit");
 
-        for (Map.Entry<Object, Object> subCustomerMap_1:subCustomerMap.entrySet()) {
+        for (Map.Entry<String, Object> subCustomerMap_1:subCustomerMap.entrySet()) {
             String subMac = (String) subCustomerMap_1.getKey();
             Map<String,Object> subCustomerMap_2 = (Map<String, Object>) redisUtil.hget("visit", (String) subMac);
             String mac = subCustomerMap_2.get("mac").toString();
@@ -447,8 +498,8 @@ public class DataProcessor implements CommandLineRunner {
     @Scheduled(cron = "0 0 0/1 * * ?")
     public void saveDataThread2(){
         //禁止区域
-        Map<Object,Object> subCustomerMap = redisUtil.hmget("stopvisit");
-        for (Map.Entry<Object, Object> subCustomerMap_1:subCustomerMap.entrySet()) {
+        Map<String,Object> subCustomerMap = redisUtil.hmget("stopvisit");
+        for (Map.Entry<String, Object> subCustomerMap_1:subCustomerMap.entrySet()) {
             String subMac = (String) subCustomerMap_1.getKey();
             Map<String,Object> subCustomerMap_2 = (Map<String, Object>) redisUtil.hget("stopvisit", (String) subMac);
             String mac = subCustomerMap_2.get("mac").toString();

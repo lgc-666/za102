@@ -44,7 +44,7 @@
         UPDATE
         class_data
         SET
-        new_student = new_student+#{newStudent},in_class_number =in_class_number+#{inClassNumber},hour_in_class_number = hour_in_class_number+#{hourInClassNumber}}
+        new_student = new_student+#{newStudent},in_class_number =in_class_number+#{inClassNumber},hour_in_class_number = hour_in_class_number+#{hourInClassNumber}
         WHERE
         id in (select id from (select * from class_data where adress=#{address} ORDER BY updatetime desc LIMIT 1)as t)
  </update>

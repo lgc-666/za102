@@ -1,15 +1,18 @@
 package zhbit.za102.Utils;
 
 import Jama.Matrix;
+import ch.qos.logback.core.net.SyslogOutputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import zhbit.za102.bean.Class;
 import zhbit.za102.bean.Machine;
 import zhbit.za102.bean.StopVisit;
 import zhbit.za102.bean.Visit;
 import zhbit.za102.service.*;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,7 +20,7 @@ import java.util.*;
 
 @Component
 public class DataUtil {
-    @Autowired
+    @Resource
     RedisUtils redisUtil;
     @Autowired
     VisitService visitService;
@@ -58,7 +61,7 @@ public class DataUtil {
             List<Visit> visits = visitService.findvisitByMac(mac);
             List<StopVisit> stopvisits = stopVisitService.findstopVisitByMac(mac);
             if (visits.isEmpty()||stopvisits.isEmpty())
-                return false;
+                return false;  //数据库中没有才给在进程中插入new_student值
             else{
                 if(!visits.isEmpty()){
                     cacheMac(visits.get(0).getAddress(),visits.get(0).getInjudge(),visits.get(0).getInTime(),visits.get(0).getLeftTime(),visits.get(0).getRt(),visits.get(0).getVisitedTimes(),visits.get(0).getBeat(),visits.get(0).getLastInTime(),visits.get(0).getMac(),visits.get(0).getRssi());
@@ -223,15 +226,27 @@ public class DataUtil {
             subMachineMap.put("y",machine.getY());
             machineMap.put(machine.getMachineid(),subMachineMap);
         }
-        redisUtil.del("machineAp");
+        redisUtil.del("machineAP");
         redisUtil.hmset("machineAP",machineMap);
+        System.out.println(redisUtil.hget("machineAP","101"));
+    }
+
+    public void get(String machineid){
+        System.out.println("测试："+redisUtil.hget("machineAP",machineid));
+    }
+
+    public Object getmachineAP(String machineid){
+        return redisUtil.hget("machineAP",machineid);
     }
 
     //刷新设备缓存心跳
     public void refreshMachineCacheBeat(String machineId){
-        Map<String,Object> subMachineMap = (Map)redisUtil.hget("machineAp",machineId);
+        System.out.println(machineId);
+        System.out.println(getmachineAP(machineId));
+        Map<String,Object> subMachineMap = (Map<String,Object>)getmachineAP(machineId);
+        System.out.println(subMachineMap);
         subMachineMap.put("beat",new Timestamp(System.currentTimeMillis()));
-        redisUtil.hset("machineAp",machineId,subMachineMap);
+        redisUtil.hset("machineAP",machineId,subMachineMap);
     }
 
     public int getDayDiffer(Date startDate, Date endDate) throws ParseException {
@@ -290,13 +305,22 @@ public class DataUtil {
     //n为环境衰减因子，需要测试矫正，最佳范围在3.25-4.5之间
     public double GetDisFromRSSI(Integer rssi)
     {
-        int A=-45;
+        int A=45;
         double n=3.5;
         double rawDis = 0.0;
-        double power = (A - rssi) / (10 * n);
+        double power = (-A - rssi) / (10 * n);
+        double height = 5.0;  //高度补偿值
         rawDis = Math.pow(10, power);  //公式(pow是次方根)
-        //返回AP到UE的距离d
-        return rawDis;
+        //返回AP到UE的距离d（空间的）
+        System.out.println(rawDis+"米");
+        //return rawDis;
+        if(rawDis<5.0){
+            rawDis=5.0;
+        }
+        double d=Math.sqrt(Math.pow(rawDis, 2) - Math.pow(height, 2));
+        d=Double.valueOf(String.format("%.1f", d)); //保留1位小数
+        //返回AP到UE的水平面距离
+        return d;
     }
 
     /**基于rssi的加权定位算法实现多个AP定位坐标求解**/
@@ -306,27 +330,57 @@ public class DataUtil {
         double[][] a_array = new double[2][2];
         double[][] b_array = new double[2][1];
 
-        //距离数组
+        //距离数组(定义3维数组)
         double[] distanceArray = new double[3];
         for(int i = 0; i< 3; i++)  //3点定位
         {
             distanceArray[i] = GetDisFromRSSI((Integer) redisUtil.hget(mac,apArray.get(i).get("machineId").toString()));
+            System.out.println("3点定位："+distanceArray[i]);
         }
 
-        //系数矩阵A初始化
-        for (int i = 0; i< 2; i++)
-        {
-            a_array[i][0] = 2 * (((Double) apArray.get(i).get("x")) -((Double) apArray.get(2).get("x")));
-            a_array[i][1] = 2 * (((Double) apArray.get(i).get("y")) -((Double) apArray.get(2).get("y")));
+        /**
+        //3台机器间的3个距离d1、d2、d3
+        double AP1X=0.0;
+        double AP2X=0.0;
+        double AP3X=0.0;
+        double AP1Y=0.0;
+        double AP2Y=0.0;
+        double AP3Y=0.0;
+        List<Machine> APs = machineService.list();
+        for(Machine c:APs){
+            if(c.getMachineid()==apArray.get(0).get("machineId").toString()){
+                AP1X=Double.valueOf(c.getX());
+                AP1Y=Double.valueOf(c.getY());
+            }
+            else if(c.getMachineid()==apArray.get(1).get("machineId").toString()){
+                AP2X=Double.valueOf(c.getX());
+                AP2Y=Double.valueOf(c.getY());
+            }
+            else (c.getMachineid()==apArray.get(2).get("machineId").toString()){
+                AP3X=Double.valueOf(c.getX());
+                AP3Y=Double.valueOf(c.getY());
+            }
         }
+        double d1= Math.sqrt(Math.pow(AP2X-AP1X, 2) + Math.pow(AP2Y-AP1Y, 2));
+
+        **/
+
+
+        //系数矩阵A初始化
+        for (int i = 0; i<2; i++)
+        {
+               a_array[i][0] = 2 * ((Double.valueOf(apArray.get(i).get("x").toString())) -(Double.valueOf(apArray.get(2).get("x").toString())));
+                System.out.println("矩阵数组："+a_array[i][0]);
+                a_array[i][1] = 2 * ((Double.valueOf(apArray.get(i).get("y").toString())) -(Double.valueOf(apArray.get(2).get("y").toString())));
+       }
 
         //矩阵b初始化
         for (int i = 0; i< 2; i++)
         {
-            b_array[i][0] = Math.pow((Double) apArray.get(i).get("x"), 2)
-                    - Math.pow((Double) apArray.get(2).get("x"), 2)
-                    + Math.pow((Double) apArray.get(i).get("y"), 2)
-                    - Math.pow((Double) apArray.get(2).get("y"), 2)
+            b_array[i][0] = Math.pow(Double.valueOf(apArray.get(i).get("x").toString()), 2)
+                    - Math.pow(Double.valueOf(apArray.get(2).get("x").toString()), 2)
+                    + Math.pow(Double.valueOf(apArray.get(i).get("y").toString()), 2)
+                    - Math.pow(Double.valueOf(apArray.get(2).get("y").toString()), 2)
                     + Math.pow(distanceArray[2], 2)
                     - Math.pow(distanceArray[i], 2);
         }
@@ -339,31 +393,48 @@ public class DataUtil {
         Matrix a2 = a1.times(A); //A^T * A
         Matrix a3 = a2.inverse().times(a1); //(A^T * A)^-1 * A^T
         Matrix resultX = a3.times(B); //(A^T * A)^-1 * A^T * b
+        //Matrix resultX =A.inverse().times(B);
         double[][] res = resultX.getArray();
+/*        double[][] res = a3.getArray();
+        double[][] res2= new double[2][2];
+        for(int i=0; i<2; i++) {
+            for(int j=0; j<2; j++) {
+                res2[i][j] = res[i][j] * b_array[i][0];
+            }
+        }*/
         /*对应的权值*/
         double weight = 0;
         for (int i = 0; i < 3; i++)
         {
             weight += (1.0 / distanceArray[i]);
         }
+
+        weight=Double.valueOf(String.format("%.1f", weight));
+        System.out.println("weight："+weight);
         totalWeight += weight;
-        point.put("x",res[0][0]*weight);
-        point.put("y",res[1][0]*weight);
+        System.out.println("totalWeight："+totalWeight);
+        point.put("x",Double.valueOf(String.format("%.1f", res[0][0]*weight)));
+        point.put("y",Double.valueOf(String.format("%.1f", res[1][0]*weight)));
+        System.out.println("point："+point);
         return point;
     }
+
 
     //计算加权后的坐标
     public Map<String, Integer>cpoint(Double totalX,Double totalY){
         Map<String, Integer> point=new HashMap<>();
+        System.out.println("加权值："+totalWeight);
         Double x=totalX/totalWeight;
         Double y=totalY/totalWeight;
         //double转integer：先转化成int类型，再转Integer
-        int x1=x.intValue();
-        int y1=y.intValue();
+        int x1= (int)Math.round(x); //        Math.round(x)四舍五入
+        int y1=(int)Math.round(y);
         Integer x2=Integer.valueOf(x1);
         Integer y2=Integer.valueOf(y1);
         point.put("macx",x2);
         point.put("macy",y2);
+        System.out.println("加权后的point："+point);
+        totalWeight = 0;//一定要归0否则会一直叠加
         return  point;
     }
 
@@ -399,4 +470,5 @@ public class DataUtil {
     }
 
     //人的位置记录
+
 }
