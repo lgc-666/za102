@@ -314,7 +314,7 @@ public class DataUtil {
         //返回AP到UE的距离d（空间的）
         System.out.println(rawDis+"米");
         //return rawDis;
-        if(rawDis<5.0){
+        if(rawDis<5.0){  //浮在空中的也算地面的
             rawDis=5.0;
         }
         double d=Math.sqrt(Math.pow(rawDis, 2) - Math.pow(height, 2));

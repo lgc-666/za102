@@ -14,9 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Jedis;
 import zhbit.za102.Utils.DataUtil;
 import zhbit.za102.Utils.RedisUtils;
-import zhbit.za102.dao.ClassDataMapper;
-import zhbit.za102.dao.StopVisitMapper;
-import zhbit.za102.dao.VisitMapper;
+import zhbit.za102.dao.*;
 
 import javax.annotation.Resource;
 import java.net.DatagramPacket;
@@ -71,6 +69,10 @@ public class DataProcessor implements CommandLineRunner {
 
     private String lastmachineid="";
     private String nowmachineid="";
+    private String lastx;
+    private String lasty;
+    private String nowx;
+    private String nowy;
 
     @Resource
     RedisUtils redisUtil;
@@ -82,6 +84,10 @@ public class DataProcessor implements CommandLineRunner {
     VisitMapper visitMapper;
     @Autowired
     StopVisitMapper stopVisitMapper;
+    @Autowired
+    MachineMapper machineMapper;
+    @Autowired
+    LocationMapper locationMapper;
 
     @Override
     public void run(String... args) throws Exception {
@@ -192,6 +198,26 @@ public class DataProcessor implements CommandLineRunner {
                                         System.out.println("是否为禁止区域："+StopJudege);
                                         //当前时间戳
                                         latest_time = new Timestamp(System.currentTimeMillis());
+
+                                        lastx=locationMapper.searchLocationX(mac);
+                                        lasty=locationMapper.searchLocationY(mac);
+                                        nowx=macpoint.get("macx").toString();
+                                        nowy=macpoint.get("macy").toString();
+                                        if(lastx!=null&&lasty!=null){
+                                            //当与上一个位置不同时,将人的位置存到数据库
+                                            if(lastx.equals(nowx)&&lasty.equals(nowy)){
+                                                System.out.println("在同一位置上没有移动");
+                                            }
+                                            else {
+                                                locationMapper.insertLocation(mac,atAddress,nowx,nowy);
+                                            }
+                                        }
+                                        else {
+                                            locationMapper.insertLocation(mac,atAddress,nowx,nowy);
+                                        }
+
+
+
                                         /**先判断是否存在，注意：同一个区域的同一个mac用更新方式，否则插入**/
                                         //不存在的情况
                                         if (!dataUtil.checkExist(mac, atAddress)) {
@@ -319,13 +345,12 @@ public class DataProcessor implements CommandLineRunner {
             //大于5分钟没有心跳的店内客人
             if (countTime >= 5 && (Integer) subCustomerMap_2.get("inJudge") == 1) {
                 Long stayTime = ((Long) subCustomerMap_2.get("left_time") - (Long) subCustomerMap_2.get("in_time")) / 1000;
-                if (stayTime < 50)  //离开时间（最后一次在店时间）-上次进店小于50秒（进来不到1分钟就走了）
-                {
-                    jumpOut_customer = 1;  //跳出量+1
-                }
+                //if (stayTime < 50)  //离开时间（最后一次在店时间）-上次进店小于50秒（进来不到1分钟就走了）
+                //{
+                jumpOut_customer = 1;  //跳出量+1
+                //}
                 subCustomerMap_2.put("inJudge", 0); //不在区域内
                 subCustomerMap_2.put("rt", stayTime.toString()); //停留时间
-                dynamic_customer = -1; //现存人数-1
             }
             else if (countTime < 5 && (Integer) subCustomerMap_2.get("inJudge") == 1) { //人在室内
                 dynamic_customer = 1; //现存人数+1
@@ -356,7 +381,7 @@ public class DataProcessor implements CommandLineRunner {
             subCountExtraMap = (Map)subCustomerMap_1.getValue();
             //查询当前小时进店量
             subHour_customer = classDataMapper.searchNowHour_in_customer_number(subAddress);
-            //如果当前店面人流量大于小时进店量, 则小时客流量等于当前店面人流量
+            //如果当前店面人流量大于小时进店量, 则小时客流量等于当前店面人流量（场景：人进去后一直在店内不出去，那么到了下个小时，小时进店量清0，当前人流就比它大）
             if (subCountExtraMap.get("dynamic_customer")>subHour_customer)
                 subHour_customer = subCountExtraMap.get("dynamic_customer");
             if (subHour_customer!=0||subCountExtraMap.get("dynamic_customer")!=0||subCountExtraMap.get("jumpOut_customer")!=0)
@@ -374,6 +399,8 @@ public class DataProcessor implements CommandLineRunner {
             else
                 subMachineMap_1.put("status","在线");
             redisUtil.hset("machineAP",subMachineId,subMachineMap_1);
+            //将状态存到数据库
+            machineMapper.updateStatus(subMachineMap_1.get("status").toString(),subMachineId);
         }
     }
 
@@ -403,13 +430,12 @@ public class DataProcessor implements CommandLineRunner {
             //大于5分钟没有心跳的店内客人
             if (countTime >= 5 && (Integer) subCustomerMap_2.get("inJudge") == 1) {
                 Long stayTime = ((Long) subCustomerMap_2.get("left_time") - (Long) subCustomerMap_2.get("in_time")) / 1000;
-                if (stayTime < 50)  //离开时间（最后一次在店时间）-上次进店小于50秒（进来不到1分钟就走了）
-                {
-                    jumpOut_customer2 = 1;  //跳出量+1
-                }
+                //if (stayTime < 50)  //离开时间（最后一次在店时间）-上次进店小于50秒（进来不到1分钟就走了）
+                //{
+                jumpOut_customer2 = 1;  //跳出量+1
+                //}
                 subCustomerMap_2.put("inJudge", 0); //不在区域内
                 subCustomerMap_2.put("rt", stayTime.toString()); //停留时间
-                dynamic_customer2 = -1; //现存人数-1
             }
             else if (countTime < 5 && (Integer) subCustomerMap_2.get("inJudge") == 1) { //人在室内
                 dynamic_customer2 = 1; //现存人数+1
@@ -458,6 +484,7 @@ public class DataProcessor implements CommandLineRunner {
             else
                 subMachineMap_1.put("status","在线");
             redisUtil.hset("machineAP",subMachineId,subMachineMap_1);
+            machineMapper.updateStatus(subMachineMap_1.get("status").toString(),subMachineId);
         }
     }
 
@@ -484,12 +511,12 @@ public class DataProcessor implements CommandLineRunner {
 
         //添加下一个小时的区域时间=======================》数据表小时插入区域的关键
         dataUtil.insertClassData();
+        visitMapper.updateInjudge();
 
         //补充遗漏的跳出量
-        List<String> extraJumpOutAddressList = visitMapper.searchExtraJumpOut();
-        visitMapper.updateInjudge();
-        for (String extraJumpOutAddress:extraJumpOutAddressList)
-            classDataMapper.updateExtraJumpOut(extraJumpOutAddress);
+ /*     List<String> extraJumpOutAddressList = visitMapper.searchExtraJumpOut();
+       for (String extraJumpOutAddress:extraJumpOutAddressList)
+            classDataMapper.updateExtraJumpOut(extraJumpOutAddress);*/
     }
 
     //此进程用于存储用户信息和补充跳出量(1小时存一次)--->禁止区域
@@ -513,13 +540,13 @@ public class DataProcessor implements CommandLineRunner {
         redisUtil.del("stopvisit");
 
         //添加下一个小时的区域时间=======================》数据表小时插入区域的关键
-        dataUtil.insertClassData();
+        //dataUtil.insertClassData();
+        stopVisitMapper.updateInjudge();
 
         //补充遗漏的跳出量
-        List<String> extraJumpOutAddressList = stopVisitMapper.searchExtraJumpOut();
-        stopVisitMapper.updateInjudge();
+/*        List<String> extraJumpOutAddressList = stopVisitMapper.searchExtraJumpOut();
         for (String extraJumpOutAddress:extraJumpOutAddressList)
-            classDataMapper.updateExtraJumpOut(extraJumpOutAddress);
+            classDataMapper.updateExtraJumpOut(extraJumpOutAddress);*/
     }
 
     //此进程用于删除三个月前的数据

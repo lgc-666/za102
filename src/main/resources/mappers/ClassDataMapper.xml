@@ -59,7 +59,7 @@
         UPDATE
         class_data
         SET
-        class_now_number = #{dynamic_customer},jump_out =jump_out+#{jumpOut_customer},hour_class_number = #{subHour_customer}
+        class_now_number = #{dynamic_customer},jump_out = jump_out+#{jumpOut_customer},hour_class_number = #{subHour_customer}
         WHERE
         id in (select id from (select * from class_data where adress=#{address} ORDER BY updatetime desc LIMIT 1)as t)
   </update>

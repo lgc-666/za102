@@ -218,4 +218,22 @@
       beat = #{beat,jdbcType=TIMESTAMP}
     where locationid = #{locationid,jdbcType=INTEGER}
   </update>
+
+
+  <!--搜索该mac的位置x-->
+  <select id="searchLocationX" resultType="java.lang.String" >
+    select x from location where locationid in (select locationid from (select * from location where mac=#{mac} ORDER BY beat desc LIMIT 1)as t)
+  </select>
+  <!--搜索该mac的位置y-->
+  <select id="searchLocationY" resultType="java.lang.String" >
+    select y from location where locationid in (select locationid from (select * from location where mac=#{mac} ORDER BY beat desc LIMIT 1)as t)
+  </select>
+  <!--插入人的坐标位置-->
+  <insert id="insertLocation">
+        insert into location
+        (mac,adress,x,y,beat)
+        values
+        (#{mac},#{address},#{x},#{y},CURRENT_TIMESTAMP)
+  </insert>
+
 </mapper>

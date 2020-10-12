@@ -28,4 +28,8 @@ public interface LocationMapper {
     int updateByPrimaryKeySelective(Location record);
 
     int updateByPrimaryKey(Location record);
+
+    String searchLocationX(@Param("mac") String mac);
+    String searchLocationY(@Param("mac") String mac);
+    void insertLocation(@Param("mac") String mac,@Param("address") String address,@Param("x") String x,@Param("y") String y);
 }

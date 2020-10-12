@@ -28,4 +28,6 @@ public interface MachineMapper {
     int updateByPrimaryKeySelective(Machine record);
 
     int updateByPrimaryKey(Machine record);
+
+    void updateStatus(@Param("status")String status,@Param("machineid")String machineid);
 }

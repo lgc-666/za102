@@ -250,4 +250,13 @@
       y = #{y,jdbcType=VARCHAR}
     where mid = #{mid,jdbcType=INTEGER}
   </update>
+
+  <update id="updateStatus">
+        UPDATE
+        machine
+        SET
+        status = #{status}
+        WHERE
+        machineid = #{machineid};
+  </update>
 </mapper>
