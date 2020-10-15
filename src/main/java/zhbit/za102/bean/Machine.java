@@ -1,8 +1,9 @@
 package zhbit.za102.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Machine {
+public class Machine implements Serializable {
     private Integer mid;
 
     private String machineid;

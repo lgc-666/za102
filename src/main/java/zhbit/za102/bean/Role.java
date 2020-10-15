@@ -1,6 +1,8 @@
 package zhbit.za102.bean;
 
-public class Role {
+import java.io.Serializable;
+
+public class Role implements Serializable {
     private Integer rid;
 
     private String name;

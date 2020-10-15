@@ -1,8 +1,9 @@
 package zhbit.za102.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Location {
+public class Location implements Serializable {
     private Integer locationid;
 
     private String mac;

@@ -1,6 +1,8 @@
 package zhbit.za102.bean;
 
-public class UserRole {
+import java.io.Serializable;
+
+public class UserRole implements Serializable {
     private Integer id;
 
     private Integer uid;

@@ -1,6 +1,8 @@
 package zhbit.za102.bean;
 
-public class RolePermission {
+import java.io.Serializable;
+
+public class RolePermission implements Serializable {
     private Integer id;
 
     private Integer rid;

@@ -53,4 +53,12 @@ public class LocationService {
         PageInfo<Location> page = new PageInfo<>(us);
         return new Msg(page);
     }
+
+    public List<String> searchLocationMac(){
+        return locationMapper.searchLocationMac();
+    }
+    public Location searchLocationleatMac(String mac){
+        return locationMapper.searchLocationleatMac(mac);
+    }
+
 }

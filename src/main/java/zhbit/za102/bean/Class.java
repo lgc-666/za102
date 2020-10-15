@@ -1,6 +1,8 @@
 package zhbit.za102.bean;
 
-public class Class {
+import java.io.Serializable;
+
+public class Class implements Serializable {
     private Integer classid;
 
     private String adress;

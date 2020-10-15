@@ -1,8 +1,9 @@
 package zhbit.za102.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ClassData {
+public class ClassData implements Serializable {
     private Integer id;
 
     private String adress;

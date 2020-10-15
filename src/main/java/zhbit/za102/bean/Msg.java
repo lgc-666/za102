@@ -1,9 +1,11 @@
 package zhbit.za102.bean;
 
+import java.io.Serializable;
+
 /**
  * 消息响应类
  */
-public class Msg {
+public class Msg implements Serializable {
     private final static int SUCCESS_CODE = 200 ;
     private final static String SUCCESS_MESSAGE = "请求成功";
     private final static String FAILURE_MESSAGE = "请求失败";

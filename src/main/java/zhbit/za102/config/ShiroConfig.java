@@ -103,6 +103,10 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/deleteClass", "perms[deleteClass]");
         filterChainDefinitionMap.put("/updateClass", "perms[updateClass]");
         filterChainDefinitionMap.put("/addClass", "perms[addClass]");
+
+        filterChainDefinitionMap.put("/getDBlocation", "perms[getDBlocation]");
+        filterChainDefinitionMap.put("/getDBlocationNotRepeat", "perms[getDBlocationNotRepeat]");
+
         filterChainDefinitionMap.put("/**", "url");
         shiroFilterFactoryBean.setFilters(customisedFilter);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

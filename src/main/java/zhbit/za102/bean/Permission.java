@@ -1,8 +1,9 @@
 package zhbit.za102.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Permission {
+public class Permission implements Serializable {
     private Integer pid;
 
     private String url;

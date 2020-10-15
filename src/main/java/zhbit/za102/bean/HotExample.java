@@ -1,10 +1,11 @@
 package zhbit.za102.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class HotExample {
+public class HotExample implements Serializable {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -64,7 +65,7 @@ public class HotExample {
         distinct = false;
     }
 
-    protected abstract static class GeneratedCriteria {
+    protected abstract static class GeneratedCriteria implements Serializable{
         protected List<Criterion> criteria;
 
         protected GeneratedCriteria() {
@@ -496,14 +497,14 @@ public class HotExample {
         }
     }
 
-    public static class Criteria extends GeneratedCriteria {
+    public static class Criteria extends GeneratedCriteria implements Serializable{
 
         protected Criteria() {
             super();
         }
     }
 
-    public static class Criterion {
+    public static class Criterion implements Serializable{
         private String condition;
 
         private Object value;

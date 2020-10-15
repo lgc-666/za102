@@ -236,4 +236,11 @@
         (#{mac},#{address},#{x},#{y},CURRENT_TIMESTAMP)
   </insert>
 
+  <select id="searchLocationMac" resultType="java.lang.String" >
+    select DISTINCT mac from location
+  </select>
+
+  <select id="searchLocationleatMac" resultType="zhbit.za102.bean.Location" >
+    select * from location where mac=#{mac} ORDER BY beat desc LIMIT 1
+  </select>
 </mapper>

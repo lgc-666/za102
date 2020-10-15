@@ -1,8 +1,9 @@
 package zhbit.za102.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Hot {
+public class Hot implements Serializable {
     private Integer hotid;
 
     private String x;

@@ -1,8 +1,9 @@
 package zhbit.za102.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class StopVisit {
+public class StopVisit implements Serializable {
     private Integer stopVisitId;
 
     private String address;

@@ -1,6 +1,8 @@
 package zhbit.za102.bean;
 
-public class RegisterApproval {
+import java.io.Serializable;
+
+public class RegisterApproval implements Serializable {
     private Integer id;
 
     private Integer rid;
